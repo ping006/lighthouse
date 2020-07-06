@@ -1052,8 +1052,14 @@
   "lighthouse-core/audits/seo/hreflang.js | failureTitle": {
     "message": "Document doesn't have a valid `hreflang`"
   },
+  "lighthouse-core/audits/seo/hreflang.js | notFullyQualified": {
+    "message": "Relative href value"
+  },
   "lighthouse-core/audits/seo/hreflang.js | title": {
     "message": "Document has a valid `hreflang`"
+  },
+  "lighthouse-core/audits/seo/hreflang.js | unexpectedLanguage": {
+    "message": "Unexpected language code"
   },
   "lighthouse-core/audits/seo/http-status-code.js | description": {
     "message": "Pages with unsuccessful HTTP status codes may not be indexed properly. [Learn more](https://web.dev/http-status-code/)."
@@ -1603,6 +1609,9 @@
   },
   "lighthouse-core/lib/lh-error.js | nonHtml": {
     "message": "The page provided is not HTML (served as MIME type {mimeType})."
+  },
+  "lighthouse-core/lib/lh-error.js | oldChromeDoesNotSupportFeature": {
+    "message": "This version of Chrome is too old to support '{featureName}'. Use a newer version to see full results."
   },
   "lighthouse-core/lib/lh-error.js | pageLoadFailed": {
     "message": "Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests."

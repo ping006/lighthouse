@@ -103,6 +103,9 @@ class EmulationDriver extends Driver {
   clearDataForOrigin() {
     return Promise.resolve();
   }
+  registerRequestIdleCallbackWrap() {
+    return Promise.resolve();
+  }
 }
 
 const fakeDriver = require('./fake-driver.js');
@@ -402,6 +405,7 @@ describe('GatherRunner', function() {
       cacheNatives: asyncFunc,
       gotoURL: asyncFunc,
       registerPerformanceObserver: asyncFunc,
+      registerRequestIdleCallbackWrap: asyncFunc,
       cleanBrowserCaches: createCheck('calledCleanBrowserCaches'),
       clearDataForOrigin: createCheck('calledClearStorage'),
       blockUrlPatterns: asyncFunc,
@@ -592,6 +596,7 @@ describe('GatherRunner', function() {
       cacheNatives: asyncFunc,
       gotoURL: asyncFunc,
       registerPerformanceObserver: asyncFunc,
+      registerRequestIdleCallbackWrap: asyncFunc,
       cleanBrowserCaches: createCheck('calledCleanBrowserCaches'),
       clearDataForOrigin: createCheck('calledClearStorage'),
       blockUrlPatterns: asyncFunc,
