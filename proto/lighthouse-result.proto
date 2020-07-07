@@ -56,7 +56,7 @@ enum LighthouseError {
   // A timeout in the initial connection to the debugger protocol.
   CRI_TIMEOUT = 20;
   // The page requested was non-HTML. 
-  NON_HTML = 21;
+  NOT_HTML = 21;
 }
 
 // The overarching Lighthouse Response object (LHR)

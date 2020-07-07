@@ -51,7 +51,7 @@ const UIStrings = {
    * @description Error message explaining that the webpage is non-HTML, so audits are ill-defined.
    * @example {application/xml} mimeType
    * */
-  nonHtml: 'The page provided is not HTML (served as MIME type {mimeType}).',
+  notHtml: 'The page provided is not HTML (served as MIME type {mimeType}).',
   /** Error message explaining that the provided URL Lighthouse points to is not valid, and cannot be loaded. */
   urlInvalid: 'The URL you have provided appears to be invalid.',
   /**
@@ -318,9 +318,9 @@ const ERRORS = {
     lhrRuntimeError: true,
   },
   /* Used when the page is non-HTML. */
-  NON_HTML: {
-    code: 'NON_HTML',
-    message: UIStrings.nonHtml,
+  NOT_HTML: {
+    code: 'NOT_HTML',
+    message: UIStrings.notHtml,
     lhrRuntimeError: true,
   },
 

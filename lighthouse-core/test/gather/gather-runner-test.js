@@ -1126,8 +1126,8 @@ describe('GatherRunner', function() {
       mainRecord.url = url;
       mainRecord.mimeType = mimeType;
       const error = getAndExpectError(mainRecord);
-      expect(error.message).toEqual('NON_HTML');
-      expect(error.code).toEqual('NON_HTML');
+      expect(error.message).toEqual('NOT_HTML');
+      expect(error.code).toEqual('NOT_HTML');
       expect(error.friendlyMessage).toBeDisplayString(/is not HTML \(served as/);
     });
   });
@@ -1237,7 +1237,7 @@ describe('GatherRunner', function() {
       mainRecord.mimeType = 'application/xml';
 
       const error = getAndExpectError(passContext, loadData, navigationError);
-      expect(error.message).toEqual('NON_HTML');
+      expect(error.message).toEqual('NOT_HTML');
     });
 
     it('fails with nav error last', () => {
