@@ -1601,7 +1601,7 @@
   "lighthouse-core/lib/lh-error.js | missingRequiredArtifact": {
     "message": "Required {artifactName} gatherer did not run."
   },
-  "lighthouse-core/lib/lh-error.js | nonHtml": {
+  "lighthouse-core/lib/lh-error.js | notHtml": {
     "message": "The page provided is not HTML (served as MIME type {mimeType})."
   },
   "lighthouse-core/lib/lh-error.js | pageLoadFailed": {
