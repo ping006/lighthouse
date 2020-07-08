@@ -58,9 +58,9 @@ class NonCompositedAnimations extends Audit {
     const animationPairs = new Map();
     trace.traceEvents.forEach(event => {
       if (event.name !== 'Animation') return;
-      if (!event.id2 || !event.id2.local) return;
 
-      const local = event.id2.local;
+      const local = event.id2?.local;
+      if (!local) return;
       if (!animationPairs.has(local)) {
         animationPairs.set(local, {begin: undefined, status: undefined})
       }
@@ -74,6 +74,20 @@ class NonCompositedAnimations extends Audit {
         case 'n':
           pair.status = event;
           break;
+      }
+    });
+
+    animationPairs.forEach(pair => {
+      if (pair.status?.args.data?.compositeFailed) {
+        results.push({
+          node: /** @type {LH.Audit.Details.NodeValue} */ ({
+            type: 'node',
+            path: 'lcpElement.devtoolsNodePath',
+            selector: 'lcpElement.selector',
+            nodeLabel: pair.begin?.args.data?.nodeId,
+            snippet: 'lcpElement.snippet',
+          }),
+        })
       }
     })
 
