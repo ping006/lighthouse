@@ -222,7 +222,7 @@ class GatherRunner {
    * @return {LH.LighthouseError|undefined}
    */
   static getNonHtmlError(mainRecord) {
-    // MIME types are case-insenstive
+    // MIME types are case-insenstive but Chrome normalizes MIME types to be lowercase.
     const HTML_MIME_TYPE = 'text/html';
 
     // If we never requested a document, there's no doctype error, let other cases handle it.
