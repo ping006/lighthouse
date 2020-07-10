@@ -43,15 +43,8 @@ class NonCompositedAnimations extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    let results = [{
-      node: /** @type {LH.Audit.Details.NodeValue} */ ({
-        type: 'node',
-        path: 'lcpElement.devtoolsNodePath',
-        selector: 'lcpElement.selector',
-        nodeLabel: 'lcpElement.nodeLabel',
-        snippet: 'lcpElement.snippet',
-      }),
-    }];
+    /** @type {{node: LH.Audit.Details.NodeValue}[]} */
+    let results = [];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
 
     /** @type {Map<string, {begin: LH.TraceEvent | undefined, status: LH.TraceEvent | undefined}>} */
