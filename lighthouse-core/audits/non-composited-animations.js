@@ -44,7 +44,7 @@ class NonCompositedAnimations extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    /** @type {{node: LH.Audit.Details.NodeValue}[]} */
+    /** @type {{animation: string, count: number}[]} */
     let results = [];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const traceOfTab = await TraceOfTab.request(trace, context);
@@ -73,26 +73,31 @@ class NonCompositedAnimations extends Audit {
       }
     });
 
+    /** @type Map<string, number> */
+    const animations = new Map();
     animationPairs.forEach(pair => {
       if (!pair.begin ||
           !pair.begin.args.data ||
           !pair.status ||
           !pair.status.args.data ||
           !pair.status.args.data.compositeFailed) return;
-      results.push({
-        node: /** @type {LH.Audit.Details.NodeValue} */ ({
-          type: 'node',
-          path: 'lcpElement.devtoolsNodePath',
-          selector: 'lcpElement.selector',
-          nodeLabel: pair.begin.args.data.nodeId,
-          snippet: 'lcpElement.snippet',
-        }),
-      })
+      const animation = '~placeholder~';
+      const count = animations.get(animation);
+      if (count) {
+        animations.set(animation, count + 1);
+      } else {
+        animations.set(animation, 1);
+      }
+    })
+
+    animations.forEach((count, animation) => {
+      results.push({animation, count})
     })
 
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
-      {key: 'node', itemType: 'node', text: str_(i18n.UIStrings.columnElement)},
+      {key: 'animation', itemType: 'text', text: str_(i18n.UIStrings.columnName)},
+      {key: 'count', itemType: 'numeric', text: str_(i18n.UIStrings.columnSize)}
     ];
 
     const details = Audit.makeTableDetails(headings, results);
