@@ -103,8 +103,8 @@ class NonCompositedAnimations extends Audit {
     }
 
     return {
-      score: 0,
-      notApplicable: false,
+      score: results.length === 0 ? 1 : 0,
+      notApplicable: results.length === 0,
       details,
       displayValue,
     };
