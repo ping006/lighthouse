@@ -6,7 +6,7 @@
 'use strict';
 
 const Audit = require('./audit.js');
-const TraceOfTab = require('../computed/trace-of-tab');
+const TraceOfTab = require('../computed/trace-of-tab.js');
 const i18n = require('../lib/i18n/i18n.js');
 
 const UIStrings = {
@@ -56,7 +56,7 @@ class NonCompositedAnimations extends Audit {
       const local = event.id2.local;
 
       if (!animationPairs.has(local)) {
-        animationPairs.set(local, {begin: undefined, status: undefined})
+        animationPairs.set(local, {begin: undefined, status: undefined});
       }
 
       const pair = animationPairs.get(local);
@@ -88,32 +88,34 @@ class NonCompositedAnimations extends Audit {
         selector: 'lcpElement.selector',
         nodeLabel: String(pair.begin.args.data.nodeId),
         snippet: 'lcpElement.snippet',
-      }
+      };
       const nodes = animations.get(animation);
       if (nodes) {
         nodes.push(node);
       } else {
         animations.set(animation, [node]);
       }
-    })
+    });
 
     /** @type {LH.Audit.Details.TableItem[]} */
-    let results = [];
+    const results = [];
     animations.forEach((nodes, animation) => {
       results.push({
         animation,
         subItems: {
           type: 'subitems',
           items: nodes.map(node => {
-            return {node}
+            return {node};
           }),
-        }
+        },
       });
-    })
+    });
 
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
+      /* eslint-disable max-len */
       {key: 'animation', itemType: 'text', subItemsHeading: {key: 'node', itemType: 'node'}, text: str_(i18n.UIStrings.columnName)},
+      /* eslint-enable max-len */
     ];
 
     const details = Audit.makeTableDetails(headings, results);
