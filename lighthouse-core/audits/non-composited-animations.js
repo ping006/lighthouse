@@ -17,7 +17,7 @@ const UIStrings = {
     '[Learn more]()',
   /** [ICU Syntax] Label identifying the number of animations that are not composited. */
   displayValue: `{itemCount, plural,
-  =1 {# animations found}
+  =1 {# animation found}
   other {# animations found}
   }`,
 };
