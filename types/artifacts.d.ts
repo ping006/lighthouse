@@ -425,6 +425,11 @@ declare global {
         usesSrcSetDensityDescriptor: boolean;
         /** The size of the underlying image file in bytes. 0 if the file could not be identified. */
         resourceSize: number;
+        /** Path that uniquely identifies the node in the DOM */
+        devtoolsNodePath: string;
+        snippet: string;
+        selector: string;
+        nodeLabel: string;
         /** The MIME type of the underlying image file. */
         mimeType?: string;
         /** The loading attribute of the image. */

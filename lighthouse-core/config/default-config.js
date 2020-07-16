@@ -216,6 +216,7 @@ const defaultConfig = {
     'content-width',
     'image-aspect-ratio',
     'image-size-responsive',
+    'sized-images',
     'deprecations',
     'mainthread-work-breakdown',
     'bootup-time',
@@ -546,6 +547,7 @@ const defaultConfig = {
         {id: 'no-vulnerable-libraries', weight: 1, group: 'best-practices-trust-safety'},
         // User Experience
         {id: 'password-inputs-can-be-pasted-into', weight: 1, group: 'best-practices-ux'},
+        {id: 'sized-images', weight: 1, group: 'best-practices-ux'},
         {id: 'image-aspect-ratio', weight: 1, group: 'best-practices-ux'},
         {id: 'image-size-responsive', weight: 1, group: 'best-practices-ux'},
         // Browser Compatibility

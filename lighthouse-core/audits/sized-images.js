@@ -7,14 +7,17 @@
 
 const Audit = require('./audit.js');
 const i18n = require('./../lib/i18n/i18n.js');
+const URL = require('./../lib/url-shim.js');
 
 const UIStrings = {
   /** Short, user-visible title for the audit when successful. */
-  title: '',
+  title: 'Success',
   /** Short, user-visible title for the audit when failing. */
-  failureTitle: '',
+  failureTitle: 'Failure',
   /** A more detailed description that describes why the audit is important and links to Lighthouse documentation on the audit; markdown links supported. */
-  description: '',
+  description: 'Description',
+  /** Table column header for the HTML elements that do not allow pasting of content. */
+  columnFailingElem: 'Failing Elements',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -65,16 +68,33 @@ class SizedImages extends Audit {
       const height = image.attributeHeight;
       // images are considered sized if they have defined & valid values
       if (!width || !height || !SizedImages.isValid(width) || !SizedImages.isValid(height)) {
-        unsizedImages.push(image);
+
+        const url = URL.elideDataURI(image.src);
+
+        unsizedImages.push({
+          url,
+          node: /** @type {LH.Audit.Details.NodeValue} */ ({
+            type: 'node',
+            path: image.devtoolsNodePath,
+            selector: image.selector,
+            nodeLabel: image.nodeLabel,
+            snippet: image.snippet,
+          }),
+        });
       }
     }
 
-
+    /** @type {LH.Audit.Details.Table['headings']} */
+    const headings = [
+      {key: 'url', itemType: 'thumbnail', text: ''},
+      {key: 'url', itemType: 'url', text: str_(i18n.UIStrings.columnURL)},
+      {key: 'node', itemType: 'node', text: str_(UIStrings.columnFailingElem)},
+    ];
 
     return {
       score: unsizedImages.length > 0 ? 0 : 1,
       notApplicable: images.length === 0,
-      details: ,
+      details: Audit.makeTableDetails(headings, unsizedImages),
     };
   }
 }
