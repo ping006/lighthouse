@@ -10,13 +10,13 @@ const i18n = require('./../lib/i18n/i18n.js');
 const URL = require('./../lib/url-shim.js');
 
 const UIStrings = {
-  /** Short, user-visible title for the audit when successful. */
-  title: 'Success',
-  /** Short, user-visible title for the audit when failing. */
-  failureTitle: 'Failure',
-  /** A more detailed description that describes why the audit is important and links to Lighthouse documentation on the audit; markdown links supported. */
-  description: 'Description',
-  /** Table column header for the HTML elements that do not allow pasting of content. */
+  /** Title of a Lighthouse audit that provides detail on whether all images had width and height attributes. This descriptive title is shown to users when every image has width and height attributes */
+  title: 'Image elements have `width` and `height` attributes',
+  /** Title of a Lighthouse audit that provides detail on whether all images had width and height attributes. This descriptive title is shown to users when one or more images does not have width and height attributes */
+  failureTitle: 'Image elements do not have `width` and `height` attributes',
+  /** Description of a Lighthouse audit that tells the user why they should include width and height attributes for all images. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. */
+  description: 'Always include width and height attributes on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)',
+  /** Table column header for the image elements that do not have image and height attributes. */
   columnFailingElem: 'Failing Elements',
 };
 
@@ -68,9 +68,7 @@ class SizedImages extends Audit {
       const height = image.attributeHeight;
       // images are considered sized if they have defined & valid values
       if (!width || !height || !SizedImages.isValid(width) || !SizedImages.isValid(height)) {
-
         const url = URL.elideDataURI(image.src);
-
         unsizedImages.push({
           url,
           node: /** @type {LH.Audit.Details.NodeValue} */ ({
