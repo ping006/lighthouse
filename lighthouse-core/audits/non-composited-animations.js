@@ -24,6 +24,31 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
+/** @type {{flag: number, text: string}[]} */
+const ACTIONABLE_FAILURE_REASONS = [
+  {
+    flag: 1 << 13,
+    text: 'Unsupported CSS Property',
+  },
+];
+
+/**
+ * Return list of actionable failure reasons and a boolean if some reasons are not actionable.
+ * @param {number} failureCode
+ * @return {{failureReasons: string[], hasNonActionable: boolean}}
+ */
+function getActionableFailureReasons(failureCode) {
+  /** @type {string[]} */
+  const failureReasons = [];
+  ACTIONABLE_FAILURE_REASONS.forEach(reason => {
+    if (failureCode & reason.flag) {
+      failureReasons.push(reason.text);
+      failureCode &= ~reason.flag;
+    }
+  });
+  return {failureReasons, hasNonActionable: Boolean(failureCode)};
+}
+
 class NonCompositedAnimations extends Audit {
   /**
    * @return {LH.Audit.Meta}
@@ -71,7 +96,7 @@ class NonCompositedAnimations extends Audit {
       }
     });
 
-    /** @type Map<string, LH.Audit.Details.NodeValue[]> */
+    /** @type Map<string, {failureReasons: string[], nodes: LH.Audit.Details.NodeValue[]}> */
     const animations = new Map();
     animationPairs.forEach(pair => {
       if (!pair.begin ||
@@ -80,6 +105,12 @@ class NonCompositedAnimations extends Audit {
           !pair.status ||
           !pair.status.args.data ||
           !pair.status.args.data.compositeFailed) return;
+
+      // Report animation only if all failure reasons are actionable
+      const {compositeFailed} = pair.status.args.data;
+      const {failureReasons, hasNonActionable} = getActionableFailureReasons(compositeFailed);
+      if (failureReasons.length === 0 || hasNonActionable) return;
+
       const animation = '~placeholder~';
       /** @type LH.Audit.Details.NodeValue */
       const node = {
@@ -89,19 +120,21 @@ class NonCompositedAnimations extends Audit {
         nodeLabel: String(pair.begin.args.data.nodeId),
         snippet: 'lcpElement.snippet',
       };
-      const nodes = animations.get(animation);
-      if (nodes) {
-        nodes.push(node);
+      const data = animations.get(animation);
+      if (data) {
+        data.nodes.push(node);
       } else {
-        animations.set(animation, [node]);
+        // TODO: Add node specific failure reasons
+        animations.set(animation, {failureReasons, nodes: [node]});
       }
     });
 
     /** @type {LH.Audit.Details.TableItem[]} */
     const results = [];
-    animations.forEach((nodes, animation) => {
+    animations.forEach(({failureReasons, nodes}, animation) => {
       results.push({
         animation,
+        failureString: failureReasons.join(', '),
         subItems: {
           type: 'subitems',
           items: nodes.map(node => {
@@ -115,6 +148,7 @@ class NonCompositedAnimations extends Audit {
     const headings = [
       /* eslint-disable max-len */
       {key: 'animation', itemType: 'text', subItemsHeading: {key: 'node', itemType: 'node'}, text: str_(i18n.UIStrings.columnName)},
+      {key: 'failureString', itemType: 'text', text: str_(i18n.UIStrings.columnName)},
       /* eslint-enable max-len */
     ];
 

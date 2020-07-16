@@ -316,7 +316,7 @@ declare global {
           }>;
           score?: number,
           had_recent_input?: boolean;
-          compositeFailed?: boolean;
+          compositeFailed?: number;
         };
         frame?: string;
         name?: string;
