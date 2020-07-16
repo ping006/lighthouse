@@ -24,7 +24,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * @fileoverview
- * Audits if a
+ * Audit that checks whether all images have width and height attributes.
  */
 
 class SizedImages extends Audit {
