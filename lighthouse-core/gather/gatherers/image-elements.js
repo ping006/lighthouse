@@ -50,6 +50,8 @@ function getHTMLImages(allElements) {
       clientRect: getClientRect(element),
       naturalWidth: element.naturalWidth,
       naturalHeight: element.naturalHeight,
+      attributeWidth: element.getAttribute('width') || '',
+      attributeHeight: element.getAttribute('height') || '',
       isCss: false,
       // @ts-ignore: loading attribute not yet added to HTMLImageElement definition.
       loading: element.loading,
@@ -97,6 +99,8 @@ function getCSSImages(allElements) {
       // CSS Images do not expose natural size, we'll determine the size later
       naturalWidth: 0,
       naturalHeight: 0,
+      attributeWidth: element.getAttribute('width') || '',
+      attributeHeight: element.getAttribute('height') || '',
       isCss: true,
       isPicture: false,
       usesObjectFit: false,
