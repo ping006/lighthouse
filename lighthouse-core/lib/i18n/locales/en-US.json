@@ -944,6 +944,18 @@
   "lighthouse-core/audits/network-server-latency.js | title": {
     "message": "Server Backend Latencies"
   },
+  "lighthouse-core/audits/non-composited-animations.js | description": {
+    "message": "Animations which are not composited can be janky and contribute to CLS. [Learn more]()"
+  },
+  "lighthouse-core/audits/non-composited-animations.js | displayValue": {
+    "message": "{itemCount, plural,\n  =1 {# animation found}\n  other {# animations found}\n  }"
+  },
+  "lighthouse-core/audits/non-composited-animations.js | title": {
+    "message": "Avoid non-composited animations"
+  },
+  "lighthouse-core/audits/non-composited-animations.js | unsupportedCSS": {
+    "message": "Unsupported CSS Property"
+  },
   "lighthouse-core/audits/offline-start-url.js | description": {
     "message": "A service worker enables your web app to be reliable in unpredictable network conditions. [Learn more](https://web.dev/offline-start-url/)."
   },

@@ -20,6 +20,8 @@ const UIStrings = {
   =1 {# animation found}
   other {# animations found}
   }`,
+  /** Label for when the animation fails to composite due to an unsupported CSS property. */
+  unsupportedCSS: 'Unsupported CSS Property',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -28,7 +30,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 const ACTIONABLE_FAILURE_REASONS = [
   {
     flag: 1 << 13,
-    text: 'Unsupported CSS Property',
+    text: UIStrings.unsupportedCSS,
   },
 ];
 
