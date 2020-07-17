@@ -679,6 +679,53 @@
         ]
       }
     },
+    "sized-images": {
+      "id": "sized-images",
+      "title": "Image elements do not have `width` and `height` attributes",
+      "description": "Always include width and height attributes on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)",
+      "score": 0,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "itemType": "thumbnail",
+            "text": ""
+          },
+          {
+            "key": "url",
+            "itemType": "url",
+            "text": "URL"
+          },
+          {
+            "key": "node",
+            "itemType": "node",
+            "text": "Failing Elements"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://localhost:10200/dobetterweb/lighthouse-480x318.jpg",
+            "node": {
+              "type": "node"
+            }
+          },
+          {
+            "url": "http://localhost:10200/dobetterweb/lighthouse-480x318.jpg",
+            "node": {
+              "type": "node"
+            }
+          },
+          {
+            "url": "blob:http://localhost:10200/ae0eac03-ab9b-4a6a-b299-f5212153e277",
+            "node": {
+              "type": "node"
+            }
+          }
+        ]
+      }
+    },
     "deprecations": {
       "id": "deprecations",
       "title": "Uses deprecated APIs",
@@ -4524,6 +4571,11 @@
           "group": "best-practices-ux"
         },
         {
+          "id": "sized-images",
+          "weight": 1,
+          "group": "best-practices-ux"
+        },
+        {
           "id": "image-aspect-ratio",
           "weight": 1,
           "group": "best-practices-ux"
@@ -4565,7 +4617,7 @@
         }
       ],
       "id": "best-practices",
-      "score": 0.08
+      "score": 0.07
     },
     "seo": {
       "title": "SEO",
@@ -5213,6 +5265,12 @@
       {
         "startTime": 0,
         "name": "lh:audit:image-size-responsive",
+        "duration": 100,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 0,
+        "name": "lh:audit:sized-images",
         "duration": 100,
         "entryType": "measure"
       },
@@ -6216,6 +6274,7 @@
         "audits[errors-in-console].details.headings[0].text",
         "audits[image-aspect-ratio].details.headings[1].text",
         "audits[image-size-responsive].details.headings[1].text",
+        "audits[sized-images].details.headings[1].text",
         "audits.deprecations.details.headings[1].text",
         "audits[bootup-time].details.headings[0].text",
         "audits[network-rtt].details.headings[0].text",
@@ -6353,6 +6412,22 @@
       ],
       "lighthouse-core/audits/image-size-responsive.js | columnExpected": [
         "audits[image-size-responsive].details.headings[4].text"
+      ],
+      "lighthouse-core/audits/sized-images.js | failureTitle": [
+        "audits[sized-images].title"
+      ],
+      "lighthouse-core/audits/sized-images.js | description": [
+        "audits[sized-images].description"
+      ],
+      "lighthouse-core/lib/i18n/i18n.js | columnFailingElem": [
+        "audits[sized-images].details.headings[2].text",
+        "audits[color-contrast].details.headings[0].text",
+        "audits[html-has-lang].details.headings[0].text",
+        "audits[image-alt].details.headings[0].text",
+        "audits.label.details.headings[0].text",
+        "audits[link-name].details.headings[0].text",
+        "audits[object-alt].details.headings[0].text",
+        "audits[password-inputs-can-be-pasted-into].details.headings[0].text"
       ],
       "lighthouse-core/audits/deprecations.js | failureTitle": [
         "audits.deprecations.title"
@@ -6736,14 +6811,6 @@
       ],
       "lighthouse-core/audits/accessibility/color-contrast.js | description": [
         "audits[color-contrast].description"
-      ],
-      "lighthouse-core/audits/accessibility/axe-audit.js | failingElementsHeader": [
-        "audits[color-contrast].details.headings[0].text",
-        "audits[html-has-lang].details.headings[0].text",
-        "audits[image-alt].details.headings[0].text",
-        "audits.label.details.headings[0].text",
-        "audits[link-name].details.headings[0].text",
-        "audits[object-alt].details.headings[0].text"
       ],
       "lighthouse-core/audits/accessibility/definition-list.js | title": [
         "audits[definition-list].title"
@@ -7193,9 +7260,6 @@
       ],
       "lighthouse-core/audits/dobetterweb/password-inputs-can-be-pasted-into.js | description": [
         "audits[password-inputs-can-be-pasted-into].description"
-      ],
-      "lighthouse-core/audits/dobetterweb/password-inputs-can-be-pasted-into.js | columnFailingElem": [
-        "audits[password-inputs-can-be-pasted-into].details.headings[0].text"
       ],
       "lighthouse-core/audits/dobetterweb/uses-http2.js | failureTitle": [
         "audits[uses-http2].title"

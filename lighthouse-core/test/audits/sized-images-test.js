@@ -21,7 +21,7 @@ describe('Sized images audit', () => {
   function testImage(condition, data) {
     const description = `handles when an image ${condition}`;
     it(description, async () => {
-      const result = SizedImagesAudit.audit({
+      const result = await SizedImagesAudit.audit({
         ImageElements: [
           generateImage(
             data.props
@@ -102,7 +102,7 @@ describe('Sized images audit', () => {
   });
 
   it('is not applicable when there are no images', async () => {
-    const result = SizedImagesAudit.audit({
+    const result = await SizedImagesAudit.audit({
       ImageElements: [],
     });
     expect(result.notApplicable).toEqual(true);
@@ -110,26 +110,26 @@ describe('Sized images audit', () => {
   });
 
   it('can return multiple unsized images', async () => {
-    const result = SizedImagesAudit.audit({
+    const result = await SizedImagesAudit.audit({
       ImageElements: [
-        generateImage(
-          {
-            attributeWidth: '100',
-            attributeHeight: '150',
-          },
-          'image1.png'
-        ),
         generateImage(
           {
             attributeWidth: '',
             attributeHeight: '',
           },
+          'image1.png'
+        ),
+        generateImage(
+          {
+            attributeWidth: '100',
+            attributeHeight: '150',
+          },
           'image2.png'
         ),
         generateImage(
           {
-            attributeWidth: '200',
-            attributeHeight: '75',
+            attributeWidth: '',
+            attributeHeight: '',
           },
           'image3.png'
         ),
