@@ -50,9 +50,11 @@ class AnimatedElements extends Gatherer {
     }
 
     const {mainThreadEvents} = TraceProcessor.computeTraceOfTab(loadData.trace);
-    const animatedElementIds = mainThreadEvents
+
+    // Get list of animated element ids without duplicates
+    const animatedElementIds = [...new Set(mainThreadEvents
       .filter(e => e.name === 'Animation' && e.ph === 'b')
-      .map(e => e.args && e.args.data && e.args.data.nodeId);
+      .map(e => e.args && e.args.data && e.args.data.nodeId))];
     
     const animatedElements = [];
     for(let i = 0; i < animatedElementIds.length; ++i) {
