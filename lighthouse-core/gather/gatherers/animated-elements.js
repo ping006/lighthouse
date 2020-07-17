@@ -55,9 +55,9 @@ class AnimatedElements extends Gatherer {
     const animatedElementIds = [...new Set(mainThreadEvents
       .filter(e => e.name === 'Animation' && e.ph === 'b')
       .map(e => e.args && e.args.data && e.args.data.nodeId))];
-    
+
     const animatedElements = [];
-    for(let i = 0; i < animatedElementIds.length; ++i) {
+    for (let i = 0; i < animatedElementIds.length; ++i) {
       const id = animatedElementIds[i];
       if (!id) continue;
       const objectId = await driver.resolveNodeIdToObjectId(id);

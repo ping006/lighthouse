@@ -105,9 +105,9 @@ class NonCompositedAnimations extends Audit {
           !pair.status ||
           !pair.status.args.data ||
           !pair.status.args.data.compositeFailed) return;
-      
+
       const nodeId = pair.begin.args.data.nodeId;
-      const element = artifacts.AnimatedElements.find(e => e.nodeId === nodeId)
+      const element = artifacts.AnimatedElements.find(e => e.nodeId === nodeId);
       if (!element) return;
       /** @type LH.Audit.Details.NodeValue */
       const node = {
