@@ -109,8 +109,8 @@ function getCSSImages(allElements) {
       // CSS Images do not expose natural size, we'll determine the size later
       naturalWidth: 0,
       naturalHeight: 0,
-      attributeWidth: element.getAttribute('width') || '',
-      attributeHeight: element.getAttribute('height') || '',
+      attributeWidth: '',
+      attributeHeight: '',
       isCss: true,
       isPicture: false,
       usesObjectFit: false,

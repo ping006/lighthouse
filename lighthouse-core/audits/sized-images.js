@@ -16,8 +16,6 @@ const UIStrings = {
   failureTitle: 'Image elements do not have `width` and `height` attributes',
   /** Description of a Lighthouse audit that tells the user why they should include width and height attributes for all images. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. */
   description: 'Always include width and height attributes on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)',
-  /** Table column header for the image elements that do not have image and height attributes. */
-  columnFailingElem: 'Failing Elements',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -55,10 +53,9 @@ class SizedImages extends Audit {
 
   /**
    * @param {LH.Artifacts} artifacts
-   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
-  static async audit(artifacts, context) {
+  static async audit(artifacts) {
     // CSS background-images are ignored for this audit
     const images = artifacts.ImageElements.filter(el => !el.isCss);
     const unsizedImages = [];
@@ -86,7 +83,7 @@ class SizedImages extends Audit {
     const headings = [
       {key: 'url', itemType: 'thumbnail', text: ''},
       {key: 'url', itemType: 'url', text: str_(i18n.UIStrings.columnURL)},
-      {key: 'node', itemType: 'node', text: str_(UIStrings.columnFailingElem)},
+      {key: 'node', itemType: 'node', text: str_(i18n.UIStrings.columnFailingElem)},
     ];
 
     return {

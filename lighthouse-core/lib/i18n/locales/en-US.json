@@ -695,9 +695,6 @@
   "lighthouse-core/audits/dobetterweb/notification-on-start.js | title": {
     "message": "Avoids requesting the notification permission on page load"
   },
-  "lighthouse-core/audits/dobetterweb/password-inputs-can-be-pasted-into.js | columnFailingElem": {
-    "message": "Failing Elements"
-  },
   "lighthouse-core/audits/dobetterweb/password-inputs-can-be-pasted-into.js | description": {
     "message": "Preventing password pasting undermines good security policy. [Learn more](https://web.dev/password-inputs-can-be-pasted-into/)."
   },
@@ -1205,9 +1202,6 @@
   "lighthouse-core/audits/service-worker.js | title": {
     "message": "Registers a service worker that controls page and `start_url`"
   },
-  "lighthouse-core/audits/sized-images.js | columnFailingElem": {
-    "message": "Failing Elements"
-  },
   "lighthouse-core/audits/sized-images.js | description": {
     "message": "Always include width and height attributes on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)"
   },
@@ -1501,6 +1495,9 @@
   },
   "lighthouse-core/lib/i18n/i18n.js | columnElement": {
     "message": "Element"
+  },
+  "lighthouse-core/lib/i18n/i18n.js | columnFailingElem": {
+    "message": "Failing Elements"
   },
   "lighthouse-core/lib/i18n/i18n.js | columnLocation": {
     "message": "Location"

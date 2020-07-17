@@ -695,9 +695,6 @@
   "lighthouse-core/audits/dobetterweb/notification-on-start.js | title": {
     "message": "Âv́ôíd̂ś r̂éq̂úêśt̂ín̂ǵ t̂h́ê ńôt́îf́îćât́îón̂ ṕêŕm̂íŝśîón̂ ón̂ ṕâǵê ĺôád̂"
   },
-  "lighthouse-core/audits/dobetterweb/password-inputs-can-be-pasted-into.js | columnFailingElem": {
-    "message": "F̂áîĺîńĝ Él̂ém̂én̂t́ŝ"
-  },
   "lighthouse-core/audits/dobetterweb/password-inputs-can-be-pasted-into.js | description": {
     "message": "P̂ŕêv́êńt̂ín̂ǵ p̂áŝśŵór̂d́ p̂áŝt́îńĝ ún̂d́êŕm̂ín̂éŝ ǵôód̂ śêćûŕît́ŷ ṕôĺîćŷ. [Ĺêár̂ń m̂ór̂é](https://web.dev/password-inputs-can-be-pasted-into/)."
   },
@@ -1205,9 +1202,6 @@
   "lighthouse-core/audits/service-worker.js | title": {
     "message": "R̂éĝíŝt́êŕŝ á ŝér̂v́îćê ẃôŕk̂ér̂ t́ĥát̂ ćôńt̂ŕôĺŝ ṕâǵê án̂d́ `start_url`"
   },
-  "lighthouse-core/audits/sized-images.js | columnFailingElem": {
-    "message": "F̂áîĺîńĝ Él̂ém̂én̂t́ŝ"
-  },
   "lighthouse-core/audits/sized-images.js | description": {
     "message": "Âĺŵáŷś îńĉĺûd́ê ẃîd́t̂h́ âńd̂ h́êíĝh́t̂ át̂t́r̂íb̂út̂éŝ ón̂ ýôúr̂ ím̂áĝé êĺêḿêńt̂ś t̂ó r̂éd̂úĉé l̂áŷóût́ ŝh́îf́t̂ín̂ǵ âńd̂ ím̂ṕr̂óv̂é ĈĹŜ. [Ĺêár̂ń m̂ór̂é](https://web.dev/optimize-cls/#images-without-dimensions)"
   },
@@ -1501,6 +1495,9 @@
   },
   "lighthouse-core/lib/i18n/i18n.js | columnElement": {
     "message": "Êĺêḿêńt̂"
+  },
+  "lighthouse-core/lib/i18n/i18n.js | columnFailingElem": {
+    "message": "F̂áîĺîńĝ Él̂ém̂én̂t́ŝ"
   },
   "lighthouse-core/lib/i18n/i18n.js | columnLocation": {
     "message": "L̂óĉát̂íôń"

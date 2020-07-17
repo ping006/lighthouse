@@ -399,9 +399,9 @@ declare global {
         naturalWidth: number;
         /** The natural height of the underlying image, uses img.naturalHeight. See https://codepen.io/patrickhulce/pen/PXvQbM for examples. */
         naturalHeight: number;
-        /** The attribute width of the image, ... */
+        /** The raw width attribute of the image element. CSS images will be set to the empty string. */
         attributeWidth: string;
-        /** The attribute height of the image, ... */
+        /** The raw height attribute of the image element. CSS images will be set to the empty string. */
         attributeHeight: string;
         /** The BoundingClientRect of the element. */
         clientRect: {
