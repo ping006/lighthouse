@@ -59,7 +59,7 @@ class NonCompositedAnimations extends Audit {
       scoreDisplayMode: Audit.SCORING_MODES.INFORMATIVE,
       title: str_(UIStrings.title),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['traces'],
+      requiredArtifacts: ['traces', 'AnimatedElements'],
     };
   }
 
@@ -105,6 +105,18 @@ class NonCompositedAnimations extends Audit {
           !pair.status ||
           !pair.status.args.data ||
           !pair.status.args.data.compositeFailed) return;
+      
+      const nodeId = pair.begin.args.data.nodeId;
+      const element = artifacts.AnimatedElements.find(e => e.nodeId === nodeId)
+      if (!element) return;
+      /** @type LH.Audit.Details.NodeValue */
+      const node = {
+        type: 'node',
+        path: element.devtoolsNodePath,
+        selector: element.selector,
+        nodeLabel: element.nodeLabel,
+        snippet: element.snippet,
+      };
 
       // Report animation only if all failure reasons are actionable
       const {compositeFailed} = pair.status.args.data;
@@ -112,14 +124,6 @@ class NonCompositedAnimations extends Audit {
       if (failureReasons.length === 0 || hasNonActionable) return;
 
       const animation = '~placeholder~';
-      /** @type LH.Audit.Details.NodeValue */
-      const node = {
-        type: 'node',
-        path: 'lcpElement.devtoolsNodePath',
-        selector: 'lcpElement.selector',
-        nodeLabel: String(pair.begin.args.data.nodeId),
-        snippet: 'lcpElement.snippet',
-      };
       const data = animations.get(animation);
       if (data) {
         data.nodes.push(node);
