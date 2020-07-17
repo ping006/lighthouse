@@ -14,6 +14,15 @@ describe('Non-composited animations audit', () => {
   it('correctly surfaces a non-composited animation', async () => {
     const artifacts = {
       traces: { defaultPass: trace },
+      AnimatedElements: [
+        {
+          "nodeId": 5,
+          "devtoolsNodePath": "1,HTML,1,BODY,1,DIV",
+          "selector": "body > div#animated-boi",
+          "nodeLabel": "div",
+          "snippet": "<div id=\"animated-boi\">"
+        }
+      ]
     };
 
     const computedCache = new Map();
@@ -21,6 +30,15 @@ describe('Non-composited animations audit', () => {
     expect(auditResult.score).toEqual(0);
     expect(auditResult.displayValue).toBeDisplayString('1 animation found');
     expect(auditResult.details.items).toHaveLength(1);
+    expect(auditResult.details.items[0].subItems.items).toEqual([
+      { node: {
+        "type": "node",
+        "path": "1,HTML,1,BODY,1,DIV",
+        "selector": "body > div#animated-boi",
+        "nodeLabel": "div",
+        "snippet": "<div id=\"animated-boi\">"
+      }}
+    ]);
     expect(auditResult.details.items[0].animation).toEqual('example');
   });
 
