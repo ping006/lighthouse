@@ -1205,6 +1205,18 @@
   "lighthouse-core/audits/service-worker.js | title": {
     "message": "R̂éĝíŝt́êŕŝ á ŝér̂v́îćê ẃôŕk̂ér̂ t́ĥát̂ ćôńt̂ŕôĺŝ ṕâǵê án̂d́ `start_url`"
   },
+  "lighthouse-core/audits/sized-images.js | columnFailingElem": {
+    "message": "F̂áîĺîńĝ Él̂ém̂én̂t́ŝ"
+  },
+  "lighthouse-core/audits/sized-images.js | description": {
+    "message": "Âĺŵáŷś îńĉĺûd́ê ẃîd́t̂h́ âńd̂ h́êíĝh́t̂ át̂t́r̂íb̂út̂éŝ ón̂ ýôúr̂ ím̂áĝé êĺêḿêńt̂ś t̂ó r̂éd̂úĉé l̂áŷóût́ ŝh́îf́t̂ín̂ǵ âńd̂ ím̂ṕr̂óv̂é ĈĹŜ. [Ĺêár̂ń m̂ór̂é](https://web.dev/optimize-cls/#images-without-dimensions)"
+  },
+  "lighthouse-core/audits/sized-images.js | failureTitle": {
+    "message": "Îḿâǵê él̂ém̂én̂t́ŝ d́ô ńôt́ ĥáv̂é `width` âńd̂ `height` át̂t́r̂íb̂út̂éŝ"
+  },
+  "lighthouse-core/audits/sized-images.js | title": {
+    "message": "Îḿâǵê él̂ém̂én̂t́ŝ h́âv́ê `width` án̂d́ `height` ât́t̂ŕîb́ût́êś"
+  },
   "lighthouse-core/audits/splash-screen.js | description": {
     "message": "Â t́ĥém̂éd̂ śp̂ĺâśĥ śĉŕêén̂ én̂śûŕêś â h́îǵĥ-q́ûál̂ít̂ý êx́p̂ér̂íêńĉé ŵh́êń ûśêŕŝ ĺâún̂ćĥ ýôúr̂ áp̂ṕ f̂ŕôḿ t̂h́êír̂ h́ôḿêśĉŕêén̂ś. [L̂éâŕn̂ ḿôŕê](https://web.dev/splash-screen/)."
   },
