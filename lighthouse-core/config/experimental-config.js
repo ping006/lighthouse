@@ -13,18 +13,12 @@
 /** @type {LH.Config.Json} */
 const config = {
   extends: 'lighthouse:default',
-  passes: [{
-    passName: 'defaultPass',
-    gatherers: [
-      'image-elements',
-    ],
-  }],
   audits: [
     'sized-images',
   ],
+  categories: {
   // @ts-ignore: `title` is required in CategoryJson. setting to the same value as the default
   // config is awkward - easier to omit the property here. Will defer to default config.
-  categories: {
     'best-practices': {
       auditRefs: [
         {id: 'sized-images', weight: 1, group: 'best-practices-ux'},
