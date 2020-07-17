@@ -9,10 +9,8 @@ const SizedImagesAudit = require('../../audits/sized-images.js');
 
 /* eslint-env jest */
 
-function generateImage(props, src = 'https://google.com/logo.png', isCss = false,
-  path = '1,HTML,1,BODY,1,IMG', selector = 'body > img', nodeLabel = 'img',
-  snippet = '<img src="cat.jpg">') {
-  const image = {src, isCss, path, selector, nodeLabel, snippet};
+function generateImage(props, src = 'https://google.com/logo.png', isCss = false) {
+  const image = {src, isCss};
   Object.assign(image, props);
   return image;
 }
@@ -143,7 +141,7 @@ describe('Sized images audit', () => {
 });
 
 describe('Size attribute validity check', () => {
-  it('fails on non-numeric characters', async () => {
+  it('fails on non-numeric characters', () => {
     expect(SizedImagesAudit.isValid('zero')).toEqual(false);
     expect(SizedImagesAudit.isValid('1002$')).toEqual(false);
     expect(SizedImagesAudit.isValid('s-5')).toEqual(false);
@@ -154,11 +152,11 @@ describe('Size attribute validity check', () => {
     expect(SizedImagesAudit.isValid('+2020')).toEqual(false);
   });
 
-  it('fails on zero input', async () => {
+  it('fails on zero input', () => {
     expect(SizedImagesAudit.isValid('0')).toEqual(false);
   });
 
-  it('passes on non-zero non-negative integer input', async () => {
+  it('passes on non-zero non-negative integer input', () => {
     expect(SizedImagesAudit.isValid('1')).toEqual(true);
     expect(SizedImagesAudit.isValid('250')).toEqual(true);
     expect(SizedImagesAudit.isValid('4000000')).toEqual(true);
