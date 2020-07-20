@@ -14,7 +14,7 @@ const UIStrings = {
   title: 'Avoid non-composited animations',
   /** Description of a diagnostic LH audit that shows the user animations that are not composited. */
   description: 'Animations which are not composited can be janky and contribute to CLS. ' +
-    '[Learn more]()',
+    '[Learn more](https://developers.google.com/web/fundamentals/performance/rendering/stick-to-compositor-only-properties-and-manage-layer-count)',
   /** [ICU Syntax] Label identifying the number of animations that are not composited. */
   displayValue: `{itemCount, plural,
   =1 {# animation found}
@@ -26,18 +26,24 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
-/** @type {{flag: number, text: string}[]} */
+/** 
+ * Each failure reason is represented by a bit flag. The bit shift operator '<<' is used to define which bit corresponds to each failure reason.
+ * https://source.chromium.org/chromium/chromium/src/+/master:third_party/blink/renderer/core/animation/compositor_animations.h;l=58;drc=f959aba6099c5d767f885b7f4632955b463dc41d?originalUrl=https:%2F%2Fcs.chromium.org%2F
+ * @type {{flag: number, text: string}[]}
+ */
 const ACTIONABLE_FAILURE_REASONS = [
   {
     flag: 1 << 13,
-    text: UIStrings.unsupportedCSS,
+    text: str_(UIStrings.unsupportedCSS),
   },
 ];
 
 /**
  * Return list of actionable failure reasons and a boolean if some reasons are not actionable.
+ * Each flag is a number with a single bit set to 1 in the position corresponding to a failure reason.
+ * We can check if a specific bit is true in the failure coding using bitwise and '&' with the flag.
  * @param {number} failureCode
- * @return {{failureReasons: string[], hasNonActionable: boolean}}
+ * @return {string[]}
  */
 function getActionableFailureReasons(failureCode) {
   /** @type {string[]} */
@@ -45,10 +51,9 @@ function getActionableFailureReasons(failureCode) {
   ACTIONABLE_FAILURE_REASONS.forEach(reason => {
     if (failureCode & reason.flag) {
       failureReasons.push(reason.text);
-      failureCode &= ~reason.flag;
     }
   });
-  return {failureReasons, hasNonActionable: Boolean(failureCode)};
+  return failureReasons;
 }
 
 class NonCompositedAnimations extends Audit {
@@ -76,10 +81,10 @@ class NonCompositedAnimations extends Audit {
 
     /** @type {Map<string, {begin: LH.TraceEvent | undefined, status: LH.TraceEvent | undefined}>} */
     const animationPairs = new Map();
-    traceOfTab.mainThreadEvents.forEach(event => {
-      if (event.name !== 'Animation') return;
+    for(const event of traceOfTab.mainThreadEvents) {
+      if (event.name !== 'Animation') continue;
 
-      if (!event.id2 || !event.id2.local) return;
+      if (!event.id2 || !event.id2.local) continue;
       const local = event.id2.local;
 
       if (!animationPairs.has(local)) {
@@ -87,7 +92,7 @@ class NonCompositedAnimations extends Audit {
       }
 
       const pair = animationPairs.get(local);
-      if (!pair) return;
+      if (!pair) continue;
       switch (event.ph) {
         case 'b':
           pair.begin = event;
@@ -96,7 +101,7 @@ class NonCompositedAnimations extends Audit {
           pair.status = event;
           break;
       }
-    });
+    }
 
     /** @type Map<string, {failureReasons: string[], nodes: LH.Audit.Details.NodeValue[]}> */
     const animations = new Map();
@@ -122,8 +127,8 @@ class NonCompositedAnimations extends Audit {
 
       // Report animation only if all failure reasons are actionable
       const {compositeFailed} = pair.status.args.data;
-      const {failureReasons, hasNonActionable} = getActionableFailureReasons(compositeFailed);
-      if (failureReasons.length === 0 || hasNonActionable) return;
+      const failureReasons = getActionableFailureReasons(compositeFailed);
+      if (failureReasons.length === 0) return;
 
       const animation = '~placeholder~';
       const data = animations.get(animation);
