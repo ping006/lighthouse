@@ -128,26 +128,6 @@ class TraceElements extends Gatherer {
   }
 
   /**
-   * Find the node ids of elements which are animated using the Animation trace events.
-   * @param {Array<LH.TraceEvent>} mainThreadEvents
-   * @return {Array<TraceElementData>}
-   */
-  static getAnimatedElements(mainThreadEvents) {
-    const animatedElementIds = [...new Set(mainThreadEvents
-      .filter(e => e.name === 'Animation' && e.ph === 'b')
-      .map(e => this.getNodeIDFromTraceEvent(e)))];
-
-    /** @type Array<TraceElementData> */
-    const animatedElementData = [];
-    animatedElementIds.forEach(nodeId => {
-      if (nodeId !== undefined) {
-        animatedElementData.push({nodeId});
-      }
-    });
-    return animatedElementData;
-  }
-
-  /**
    * @param {LH.Gatherer.PassContext} passContext
    * @param {LH.Gatherer.LoadData} loadData
    * @return {Promise<LH.Artifacts['TraceElements']>}
@@ -160,44 +140,39 @@ class TraceElements extends Gatherer {
 
     const {largestContentfulPaintEvt, mainThreadEvents} =
       TraceProcessor.computeTraceOfTab(loadData.trace);
+    /** @type {Array<TraceElementData>} */
+    const backendNodeData = [];
 
     const lcpNodeId = TraceElements.getNodeIDFromTraceEvent(largestContentfulPaintEvt);
     const clsNodeData = TraceElements.getTopLayoutShiftElements(mainThreadEvents);
-    const animatedElementData = TraceElements.getAnimatedElements(mainThreadEvents);
-
-    const backendNodeDataMap = new Map([
-      ['largest-contentful-paint', lcpNodeId ? [{nodeId: lcpNodeId}] : []],
-      ['cumulative-layout-shift', [...clsNodeData]],
-      ['CLS/non-composited-animations', [...animatedElementData]],
-    ]);
+    if (lcpNodeId) {
+      backendNodeData.push({nodeId: lcpNodeId});
+    }
+    backendNodeData.push(...clsNodeData);
 
     const traceElements = [];
-    for (const [metricName, backendNodeData] of backendNodeDataMap) {
-      for (let i = 0; i < backendNodeData.length; i++) {
-        const backendNodeId = backendNodeData[i].nodeId;
-        const objectId = await driver.resolveNodeIdToObjectId(backendNodeId);
-        if (!objectId) continue;
-        const response = await driver.sendCommand('Runtime.callFunctionOn', {
-          objectId,
-          functionDeclaration: `function () {
-            ${setAttributeMarker.toString()};
-            ${pageFunctions.getNodePathString};
-            ${pageFunctions.getNodeSelectorString};
-            ${pageFunctions.getNodeLabelString};
-            ${pageFunctions.getOuterHTMLSnippetString};
-            return setAttributeMarker.call(this, '${metricName}');
-          }`,
-          returnByValue: true,
-          awaitPromise: true,
-        });
+    for (let i = 0; i < backendNodeData.length; i++) {
+      const backendNodeId = backendNodeData[i].nodeId;
+      const metricName =
+        lcpNodeId === backendNodeId ? 'largest-contentful-paint' : 'cumulative-layout-shift';
+      const objectId = await driver.resolveNodeIdToObjectId(backendNodeId);
+      if (!objectId) continue;
+      const response = await driver.sendCommand('Runtime.callFunctionOn', {
+        objectId,
+        functionDeclaration: `function () {
+          ${setAttributeMarker.toString()};
+          ${pageFunctions.getNodePathString};
+          ${pageFunctions.getNodeSelectorString};
+          ${pageFunctions.getNodeLabelString};
+          ${pageFunctions.getOuterHTMLSnippetString};
+          return setAttributeMarker.call(this, '${metricName}');
+        }`,
+        returnByValue: true,
+        awaitPromise: true,
+      });
 
-        if (response && response.result && response.result.value) {
-          traceElements.push({
-            ...response.result.value,
-            score: backendNodeData[i].score,
-            nodeId: backendNodeId,
-          });
-        }
+      if (response && response.result && response.result.value) {
+        traceElements.push({...response.result.value, score: backendNodeData[i].score});
       }
     }
 

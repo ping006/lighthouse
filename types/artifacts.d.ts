@@ -484,7 +484,6 @@ declare global {
         devtoolsNodePath: string;
         snippet?: string;
         score?: number;
-        nodeId?: number;
       }
 
       export interface ViewportDimensions {
