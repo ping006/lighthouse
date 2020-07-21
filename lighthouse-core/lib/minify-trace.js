@@ -37,6 +37,8 @@ const traceEventsToAlwaysKeep = new Set([
   'ResourceFinish',
   'ResourceReceivedData',
   'EventDispatch',
+  'Animation',
+  'CompositeAnimation',
 ]);
 
 const traceEventsToKeepInToplevelTask = new Set([

@@ -83,7 +83,7 @@ class NonCompositedAnimations extends Audit {
     /** @type {Map<string, {begin: LH.TraceEvent | undefined, status: LH.TraceEvent | undefined}>} */
     const animationPairs = new Map();
     for(const event of traceOfTab.mainThreadEvents) {
-      if (event.name !== 'Animation') continue;
+      if (event.name !== 'Animation' && event.name !== 'CompositeAnimation') continue;
 
       if (!event.id2 || !event.id2.local) continue;
       const local = event.id2.local;
@@ -94,13 +94,11 @@ class NonCompositedAnimations extends Audit {
 
       const pair = animationPairs.get(local);
       if (!pair) continue;
-      switch (event.ph) {
-        case 'b':
-          pair.begin = event;
-          break;
-        case 'n':
-          pair.status = event;
-          break;
+      if (event.name === 'Animation' && event.ph === 'b') {
+        pair.begin = event;
+      }
+      else if (event.name === 'CompositeAnimation') {
+        pair.status = event;
       }
     }
 
