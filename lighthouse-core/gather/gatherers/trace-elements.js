@@ -136,14 +136,14 @@ class TraceElements extends Gatherer {
     const animatedElementIds = [...new Set(mainThreadEvents
       .filter(e => e.name === 'Animation' && e.ph === 'b')
       .map(e => this.getNodeIDFromTraceEvent(e)))];
-    
+
     /** @type Array<TraceElementData> */
     const animatedElementData = [];
     animatedElementIds.forEach(nodeId => {
       if (nodeId !== undefined) {
-        animatedElementData.push({nodeId})
+        animatedElementData.push({nodeId});
       }
-    })
+    });
     return animatedElementData;
   }
 
@@ -172,7 +172,7 @@ class TraceElements extends Gatherer {
     ]);
 
     const traceElements = [];
-    for(const [metricName, backendNodeData] of backendNodeDataMap) {
+    for (const [metricName, backendNodeData] of backendNodeDataMap) {
       for (let i = 0; i < backendNodeData.length; i++) {
         const backendNodeId = backendNodeData[i].nodeId;
         const objectId = await driver.resolveNodeIdToObjectId(backendNodeId);
@@ -192,7 +192,11 @@ class TraceElements extends Gatherer {
         });
 
         if (response && response.result && response.result.value) {
-          traceElements.push({...response.result.value, score: backendNodeData[i].score, nodeId: backendNodeId});
+          traceElements.push({
+            ...response.result.value,
+            score: backendNodeData[i].score,
+            nodeId: backendNodeId,
+          });
         }
       }
     }

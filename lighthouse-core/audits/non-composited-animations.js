@@ -26,7 +26,7 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
-/** 
+/**
  * Each failure reason is represented by a bit flag. The bit shift operator '<<' is used to define which bit corresponds to each failure reason.
  * https://source.chromium.org/chromium/chromium/src/+/master:third_party/blink/renderer/core/animation/compositor_animations.h;l=58;drc=f959aba6099c5d767f885b7f4632955b463dc41d?originalUrl=https:%2F%2Fcs.chromium.org%2F
  * @type {{flag: number, text: string}[]}
@@ -78,11 +78,12 @@ class NonCompositedAnimations extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const traceOfTab = await TraceOfTab.request(trace, context);
-    const animatedElements = artifacts.TraceElements.filter(e => e.metricName === 'CLS/non-composited-animations');
+    const animatedElements = artifacts.TraceElements
+      .filter(e => e.metricName === 'CLS/non-composited-animations');
 
     /** @type {Map<string, {begin: LH.TraceEvent | undefined, status: LH.TraceEvent | undefined}>} */
     const animationPairs = new Map();
-    for(const event of traceOfTab.mainThreadEvents) {
+    for (const event of traceOfTab.mainThreadEvents) {
       if (event.name !== 'Animation' && event.name !== 'CompositeAnimation') continue;
 
       if (!event.id2 || !event.id2.local) continue;
@@ -96,8 +97,7 @@ class NonCompositedAnimations extends Audit {
       if (!pair) continue;
       if (event.name === 'Animation' && event.ph === 'b') {
         pair.begin = event;
-      }
-      else if (event.name === 'CompositeAnimation') {
+      } else if (event.name === 'CompositeAnimation') {
         pair.status = event;
       }
     }
