@@ -37,8 +37,6 @@ const traceEventsToAlwaysKeep = new Set([
   'ResourceFinish',
   'ResourceReceivedData',
   'EventDispatch',
-  'Animation',
-  'CompositeAnimation',
 ]);
 
 const traceEventsToKeepInToplevelTask = new Set([
@@ -68,6 +66,8 @@ const traceEventsToKeepInProcess = new Set([
   'domContentLoadedEventEnd',
   'largestContentfulPaint::Invalidate',
   'largestContentfulPaint::Candidate',
+  'Animation',
+  'CompositeAnimation',
 ]);
 
 /**
