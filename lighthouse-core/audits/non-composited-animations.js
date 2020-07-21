@@ -124,7 +124,6 @@ class NonCompositedAnimations extends Audit {
         snippet: element.snippet,
       };
 
-      // Report animation only if all failure reasons are actionable
       const {compositeFailed} = pair.status.args.data;
       const failureReasons = getActionableFailureReasons(compositeFailed);
       if (failureReasons.length === 0) return;
