@@ -959,8 +959,17 @@
   "lighthouse-core/audits/network-server-latency.js | title": {
     "message": "Server Backend Latencies"
   },
+  "lighthouse-core/audits/no-unload-listeners.js | description": {
+    "message": "The `unload` event does not fire reliably and listening for it can prevent browser optimizations like the Back-Forward Cache. Consider using the `pagehide` or `visibilitychange` events instead. [Learn More](https://developers.google.com/web/updates/2018/07/page-lifecycle-api#the-unload-event)"
+  },
+  "lighthouse-core/audits/no-unload-listeners.js | failureTitle": {
+    "message": "Registers an `unload` listener"
+  },
+  "lighthouse-core/audits/no-unload-listeners.js | title": {
+    "message": "Avoids `unload` event listeners"
+  },
   "lighthouse-core/audits/non-composited-animations.js | description": {
-    "message": "Animations which are not composited can be janky and contribute to CLS. [Learn more]()"
+    "message": "Animations which are not composited can be janky and contribute to CLS. [Learn more](https://developers.google.com/web/fundamentals/performance/rendering/stick-to-compositor-only-properties-and-manage-layer-count)"
   },
   "lighthouse-core/audits/non-composited-animations.js | displayValue": {
     "message": "{itemCount, plural,\n  =1 {# animation found}\n  other {# animations found}\n  }"
