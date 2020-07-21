@@ -162,7 +162,6 @@ const defaultConfig = {
       'trace-elements',
       'inspector-issues',
       'source-maps',
-      'animated-elements',
     ],
   },
   {

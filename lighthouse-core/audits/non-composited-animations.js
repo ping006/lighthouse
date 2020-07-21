@@ -66,7 +66,7 @@ class NonCompositedAnimations extends Audit {
       scoreDisplayMode: Audit.SCORING_MODES.INFORMATIVE,
       title: str_(UIStrings.title),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['traces', 'AnimatedElements'],
+      requiredArtifacts: ['traces', 'TraceElements'],
     };
   }
 
@@ -78,6 +78,7 @@ class NonCompositedAnimations extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const traceOfTab = await TraceOfTab.request(trace, context);
+    const animatedElements = artifacts.TraceElements.filter(e => e.metricName === 'CLS/non-composited-animations');
 
     /** @type {Map<string, {begin: LH.TraceEvent | undefined, status: LH.TraceEvent | undefined}>} */
     const animationPairs = new Map();
@@ -114,7 +115,7 @@ class NonCompositedAnimations extends Audit {
           !pair.status.args.data.compositeFailed) return;
 
       const nodeId = pair.begin.args.data.nodeId;
-      const element = artifacts.AnimatedElements.find(e => e.nodeId === nodeId);
+      const element = animatedElements.find(e => e.nodeId === nodeId);
       if (!element) return;
       /** @type LH.Audit.Details.NodeValue */
       const node = {

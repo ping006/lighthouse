@@ -144,8 +144,6 @@ declare global {
       TapTargets: Artifacts.TapTarget[];
       /** Elements associated with metrics (ie: Largest Contentful Paint element). */
       TraceElements: Artifacts.TraceElement[];
-      /** Elements which are animated and are associated with an animation trace event. */
-      AnimatedElements: Artifacts.AnimatedElement[];
     }
 
     module Artifacts {
@@ -486,14 +484,7 @@ declare global {
         devtoolsNodePath: string;
         snippet?: string;
         score?: number;
-      }
-
-      export interface AnimatedElement {
-        nodeId: number;
-        selector: string;
-        nodeLabel?: string;
-        devtoolsNodePath: string;
-        snippet?: string;
+        nodeId?: number;
       }
 
       export interface ViewportDimensions {

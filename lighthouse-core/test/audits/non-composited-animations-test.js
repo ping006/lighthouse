@@ -14,13 +14,14 @@ describe('Non-composited animations audit', () => {
   it('correctly surfaces a non-composited animation', async () => {
     const artifacts = {
       traces: {defaultPass: trace},
-      AnimatedElements: [
+      TraceElements: [
         {
-          'nodeId': 5,
+          'metricName': 'CLS/non-composited-animations',
           'devtoolsNodePath': '1,HTML,1,BODY,1,DIV',
           'selector': 'body > div#animated-boi',
           'nodeLabel': 'div',
           'snippet': '<div id="animated-boi">',
+          'nodeId': 5,
         },
       ],
     };
