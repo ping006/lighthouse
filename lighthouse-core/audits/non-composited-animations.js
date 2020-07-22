@@ -79,12 +79,12 @@ class NonCompositedAnimations extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const traceOfTab = await TraceOfTab.request(trace, context);
     const animatedElements = artifacts.TraceElements
-      .filter(e => e.metricName === 'CLS/non-composited-animations');
+      .filter(e => e.traceEventType === 'animation');
 
     /** @type {Map<string, {begin: LH.TraceEvent | undefined, status: LH.TraceEvent | undefined}>} */
     const animationPairs = new Map();
     for (const event of traceOfTab.mainThreadEvents) {
-      if (event.name !== 'Animation' && event.name !== 'CompositeAnimation') continue;
+      if (event.name !== 'Animation') continue;
 
       if (!event.id2 || !event.id2.local) continue;
       const local = event.id2.local;
@@ -95,9 +95,9 @@ class NonCompositedAnimations extends Audit {
 
       const pair = animationPairs.get(local);
       if (!pair) continue;
-      if (event.name === 'Animation' && event.ph === 'b') {
+      if (event.ph === 'b') {
         pair.begin = event;
-      } else if (event.name === 'CompositeAnimation') {
+      } else if (event.ph === 'n' && event.args.data && event.args.data.compositeFailed) {
         pair.status = event;
       }
     }
