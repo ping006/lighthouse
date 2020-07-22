@@ -1211,15 +1211,6 @@
   "lighthouse-core/audits/service-worker.js | title": {
     "message": "Registers a service worker that controls page and `start_url`"
   },
-  "lighthouse-core/audits/sized-images.js | description": {
-    "message": "Always include width and height attributes on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)"
-  },
-  "lighthouse-core/audits/sized-images.js | failureTitle": {
-    "message": "Image elements do not have `width` and `height` attributes"
-  },
-  "lighthouse-core/audits/sized-images.js | title": {
-    "message": "Image elements have `width` and `height` attributes"
-  },
   "lighthouse-core/audits/splash-screen.js | description": {
     "message": "A themed splash screen ensures a high-quality experience when users launch your app from their homescreens. [Learn more](https://web.dev/splash-screen/)."
   },
@@ -1267,6 +1258,15 @@
   },
   "lighthouse-core/audits/timing-budget.js | title": {
     "message": "Timing budget"
+  },
+  "lighthouse-core/audits/unsized-images.js | description": {
+    "message": "Always include explicit width and height on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)"
+  },
+  "lighthouse-core/audits/unsized-images.js | failureTitle": {
+    "message": "Image elements do not have explicit `width` and `height`"
+  },
+  "lighthouse-core/audits/unsized-images.js | title": {
+    "message": "Image elements have explicit `width` and `height`"
   },
   "lighthouse-core/audits/user-timings.js | columnType": {
     "message": "Type"

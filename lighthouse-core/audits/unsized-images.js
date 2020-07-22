@@ -10,12 +10,12 @@ const i18n = require('./../lib/i18n/i18n.js');
 const URL = require('./../lib/url-shim.js');
 
 const UIStrings = {
-  /** Title of a Lighthouse audit that provides detail on whether all images had width and height attributes. This descriptive title is shown to users when every image has width and height attributes */
-  title: 'Image elements have `width` and `height` attributes',
-  /** Title of a Lighthouse audit that provides detail on whether all images had width and height attributes. This descriptive title is shown to users when one or more images does not have width and height attributes */
-  failureTitle: 'Image elements do not have `width` and `height` attributes',
-  /** Description of a Lighthouse audit that tells the user why they should include width and height attributes for all images. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. */
-  description: 'Always include width and height attributes on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)',
+  /** Title of a Lighthouse audit that provides detail on whether all images have explicit width and height. This descriptive title is shown to users when every image has explicit width and height */
+  title: 'Image elements have explicit `width` and `height`',
+  /** Title of a Lighthouse audit that provides detail on whether all images have explicit width and height. This descriptive title is shown to users when one or more images does not have explicit width and height */
+  failureTitle: 'Image elements do not have explicit `width` and `height`',
+  /** Description of a Lighthouse audit that tells the user why they should include explicit width and height for all images. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. */
+  description: 'Always include explicit width and height on your image elements to reduce layout shifting and improve CLS. [Learn more](https://web.dev/optimize-cls/#images-without-dimensions)',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -31,7 +31,7 @@ class SizedImages extends Audit {
    */
   static get meta() {
     return {
-      id: 'sized-images',
+      id: 'unsized-images',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),

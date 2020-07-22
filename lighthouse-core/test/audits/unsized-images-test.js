@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const SizedImagesAudit = require('../../audits/sized-images.js');
+const SizedImagesAudit = require('../../audits/unsized-images.js');
 
 /* eslint-env jest */
 
