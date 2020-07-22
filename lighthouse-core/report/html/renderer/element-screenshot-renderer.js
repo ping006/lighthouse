@@ -53,13 +53,11 @@ class ElementScreenshotRenderer {
     // Try to center clipped region.
     const screenshotLeftVisibleEdge = clamp(
       elementRectCenter.x - elementPreviewSizeSC.width / 2,
-      0,
-      screenshotSize.width - elementPreviewSizeSC.width
+      0, screenshotSize.width - elementPreviewSizeSC.width
     );
     const screenshotTopVisisbleEdge = clamp(
       elementRectCenter.y - elementPreviewSizeSC.height / 2,
-      0,
-      screenshotSize.height - elementPreviewSizeSC.height
+      0, screenshotSize.height - elementPreviewSizeSC.height
     );
 
     return {
@@ -102,9 +100,8 @@ class ElementScreenshotRenderer {
       `${right},${top} 1,${top}       1,${bottom}       ${right},${bottom}`,
     ];
     for (const points of polygonsPoints) {
-      clipPathEl.append(
-        dom.createElementNS('http://www.w3.org/2000/svg', 'polygon', undefined, {points})
-      );
+      clipPathEl.append(dom.createElementNS(
+        'http://www.w3.org/2000/svg', 'polygon', undefined, {points}));
     }
   }
 
@@ -156,15 +153,13 @@ class ElementScreenshotRenderer {
         top: Number(el.dataset['rectTop']),
         bottom: Number(el.dataset['rectTop']) + Number(el.dataset['rectHeight']),
       };
-      overlay.appendChild(
-        ElementScreenshotRenderer.render(
-          dom,
-          templateContext,
-          fullPageScreenshot,
-          elementRectSC,
-          maxLightboxSize
-        )
-      );
+      overlay.appendChild(ElementScreenshotRenderer.render(
+        dom,
+        templateContext,
+        fullPageScreenshot,
+        elementRectSC,
+        maxLightboxSize
+      ));
       overlay.addEventListener('click', () => {
         overlay.remove();
       });
@@ -239,8 +234,8 @@ class ElementScreenshotRenderer {
 
     imageEl.style.backgroundPositionY = -(positions.screenshot.top * zoomFactor) + 'px';
     imageEl.style.backgroundPositionX = -(positions.screenshot.left * zoomFactor) + 'px';
-    imageEl.style.backgroundSize = `${fullPageScreenshot.width *
-      zoomFactor}px ${fullPageScreenshot.height * zoomFactor}px`;
+    imageEl.style.backgroundSize =
+      `${fullPageScreenshot.width * zoomFactor}px ${fullPageScreenshot.height * zoomFactor}px`;
 
     const markerEl = dom.find('.lh-element-screenshot__element-marker', containerEl);
     markerEl.style.width = elementRectSC.width * zoomFactor + 'px';
