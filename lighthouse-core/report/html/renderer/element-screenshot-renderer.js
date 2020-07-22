@@ -47,18 +47,19 @@ class ElementScreenshotRenderer {
    * @param {Size} elementPreviewSizeSC
    * @param {Size} screenshotSize
    */
-  static getScreenshotPositions(elementRectSC,
-      elementPreviewSizeSC, screenshotSize) {
+  static getScreenshotPositions(elementRectSC, elementPreviewSizeSC, screenshotSize) {
     const elementRectCenter = getRectCenterPoint(elementRectSC);
 
     // Try to center clipped region.
     const screenshotLeftVisibleEdge = clamp(
       elementRectCenter.x - elementPreviewSizeSC.width / 2,
-      0, screenshotSize.width - elementPreviewSizeSC.width
+      0,
+      screenshotSize.width - elementPreviewSizeSC.width
     );
     const screenshotTopVisisbleEdge = clamp(
       elementRectCenter.y - elementPreviewSizeSC.height / 2,
-      0, screenshotSize.height - elementPreviewSizeSC.height
+      0,
+      screenshotSize.height - elementPreviewSizeSC.height
     );
 
     return {
@@ -90,11 +91,9 @@ class ElementScreenshotRenderer {
 
     // Normalize values between 0-1.
     const top = positionClip.top / elementPreviewSize.height;
-    const bottom =
-      top + elementRect.height / elementPreviewSize.height;
+    const bottom = top + elementRect.height / elementPreviewSize.height;
     const left = positionClip.left / elementPreviewSize.width;
-    const right =
-      left + elementRect.width / elementPreviewSize.width;
+    const right = left + elementRect.width / elementPreviewSize.width;
 
     const polygonsPoints = [
       `0,0             1,0            1,${top}          0,${top}`,
@@ -103,8 +102,9 @@ class ElementScreenshotRenderer {
       `${right},${top} 1,${top}       1,${bottom}       ${right},${bottom}`,
     ];
     for (const points of polygonsPoints) {
-      clipPathEl.append(dom.createElementNS(
-        'http://www.w3.org/2000/svg', 'polygon', undefined, {points}));
+      clipPathEl.append(
+        dom.createElementNS('http://www.w3.org/2000/svg', 'polygon', undefined, {points})
+      );
     }
   }
 
@@ -156,13 +156,15 @@ class ElementScreenshotRenderer {
         top: Number(el.dataset['rectTop']),
         bottom: Number(el.dataset['rectTop']) + Number(el.dataset['rectHeight']),
       };
-      overlay.appendChild(ElementScreenshotRenderer.render(
-        dom,
-        templateContext,
-        fullPageScreenshot,
-        elementRectSC,
-        maxLightboxSize
-      ));
+      overlay.appendChild(
+        ElementScreenshotRenderer.render(
+          dom,
+          templateContext,
+          fullPageScreenshot,
+          elementRectSC,
+          maxLightboxSize
+        )
+      );
       overlay.addEventListener('click', () => {
         overlay.remove();
       });
@@ -198,8 +200,7 @@ class ElementScreenshotRenderer {
    * @param {Size} maxRenderSizeDC e.g. maxThumbnailSize or maxLightboxSize.
    * @return {Element}
    */
-  static render(dom, templateContext, fullPageScreenshot, elementRectSC,
-      maxRenderSizeDC) {
+  static render(dom, templateContext, fullPageScreenshot, elementRectSC, maxRenderSizeDC) {
     const tmpl = dom.cloneTemplate('#tmpl-lh-element-screenshot', templateContext);
     const containerEl = dom.find('.lh-element-screenshot', tmpl);
 
@@ -210,15 +211,13 @@ class ElementScreenshotRenderer {
 
     // Zoom out when highlighted region takes up most of the viewport.
     // This provides more context for where on the page this element is.
-    const zoomFactor =
-      this._computeZoomFactor(elementRectSC, maxRenderSizeDC);
+    const zoomFactor = this._computeZoomFactor(elementRectSC, maxRenderSizeDC);
 
     const elementPreviewSizeSC = {
       width: maxRenderSizeDC.width / zoomFactor,
       height: maxRenderSizeDC.height / zoomFactor,
     };
-    elementPreviewSizeSC.width =
-      Math.min(fullPageScreenshot.width, elementPreviewSizeSC.width);
+    elementPreviewSizeSC.width = Math.min(fullPageScreenshot.width, elementPreviewSizeSC.width);
     /* This preview size is either the size of the thumbnail or size of the Lightbox */
     const elementPreviewSizeDC = {
       width: elementPreviewSizeSC.width * zoomFactor,
@@ -240,8 +239,8 @@ class ElementScreenshotRenderer {
 
     imageEl.style.backgroundPositionY = -(positions.screenshot.top * zoomFactor) + 'px';
     imageEl.style.backgroundPositionX = -(positions.screenshot.left * zoomFactor) + 'px';
-    imageEl.style.backgroundSize =
-      `${fullPageScreenshot.width * zoomFactor}px ${fullPageScreenshot.height * zoomFactor}px`;
+    imageEl.style.backgroundSize = `${fullPageScreenshot.width *
+      zoomFactor}px ${fullPageScreenshot.height * zoomFactor}px`;
 
     const markerEl = dom.find('.lh-element-screenshot__element-marker', containerEl);
     markerEl.style.width = elementRectSC.width * zoomFactor + 'px';
@@ -253,8 +252,13 @@ class ElementScreenshotRenderer {
     maskEl.style.width = elementPreviewSizeDC.width + 'px';
     maskEl.style.height = elementPreviewSizeDC.height + 'px';
 
-    ElementScreenshotRenderer.renderClipPathInScreenshot(dom, maskEl, positions.clip,
-      elementRectSC, elementPreviewSizeSC);
+    ElementScreenshotRenderer.renderClipPathInScreenshot(
+      dom,
+      maskEl,
+      positions.clip,
+      elementRectSC,
+      elementPreviewSizeSC
+    );
 
     return containerEl;
   }
