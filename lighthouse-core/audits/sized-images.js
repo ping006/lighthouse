@@ -52,6 +52,29 @@ class SizedImages extends Audit {
   }
 
   /**
+   * @param {string} attrWidth
+   * @param {string} attrHeight
+   * @param {string} cssWidth
+   * @param {string} cssHeight
+   * @return {boolean}
+   */
+  static unsizedImage(attrWidth, attrHeight, cssWidth, cssHeight) {
+    if (attrWidth && attrHeight) {
+      return !SizedImages.isValid(attrWidth) || !SizedImages.isValid(attrHeight);
+    }
+    if (attrWidth && cssHeight) {
+      return !SizedImages.isValid(attrWidth) || cssHeight === 'auto';
+    }
+    if (cssWidth && attrHeight) {
+      return cssWidth === 'auto' || !SizedImages.isValid(attrHeight);
+    }
+    if (cssWidth && cssHeight) {
+      return cssWidth === 'auto' || cssHeight === 'auto';
+    }
+    return true;
+  }
+
+  /**
    * @param {LH.Artifacts} artifacts
    * @return {Promise<LH.Audit.Product>}
    */
@@ -61,10 +84,12 @@ class SizedImages extends Audit {
     const unsizedImages = [];
 
     for (const image of images) {
-      const width = image.attributeWidth;
-      const height = image.attributeHeight;
+      const attrWidth = image.attributeWidth;
+      const attrHeight = image.attributeHeight;
+      const cssWidth = image.propertyWidth;
+      const cssHeight = image.propertyHeight;
       // images are considered sized if they have defined & valid values
-      if (!width || !height || !SizedImages.isValid(width) || !SizedImages.isValid(height)) {
+      if (SizedImages.unsizedImage(attrWidth, attrHeight, cssWidth, cssHeight)) {
         const url = URL.elideDataURI(image.src);
         unsizedImages.push({
           url,

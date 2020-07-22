@@ -12,6 +12,7 @@
 const Gatherer = require('./gatherer.js');
 const pageFunctions = require('../../lib/page-functions.js');
 const Driver = require('../driver.js'); // eslint-disable-line no-unused-vars
+const FontSize = require('./seo/font-size.js');
 
 /* global window, getElementsInDocument, Image, getNodePath, getNodeSelector, getNodeLabel, getOuterHTMLSnippet */
 
@@ -53,6 +54,8 @@ function getHTMLImages(allElements) {
       naturalHeight: element.naturalHeight,
       attributeWidth: element.getAttribute('width') || '',
       attributeHeight: element.getAttribute('height') || '',
+      propertyWidth: '',
+      propertyHeight: '',
       isCss: false,
       // @ts-ignore: loading attribute not yet added to HTMLImageElement definition.
       loading: element.loading,
@@ -111,6 +114,8 @@ function getCSSImages(allElements) {
       naturalHeight: 0,
       attributeWidth: '',
       attributeHeight: '',
+      propertyWidth: '',
+      propertyHeight: '',
       isCss: true,
       isPicture: false,
       usesObjectFit: false,
@@ -162,6 +167,72 @@ function determineNaturalSize(url) {
   });
 }
 
+/**
+ * @param {LH.Crdp.CSS.CSSStyle} [style]
+ * @param {string} property
+ * @return {boolean}
+ */
+function hasSizeDeclaration(style, property) {
+  return !!style && !!style.cssProperties.find(({name}) => name === property);
+}
+
+/**
+ * Finds the most specific directly matched CSS font-size rule from the list.
+ *
+ * @param {Array<LH.Crdp.CSS.RuleMatch>} [matchedCSSRules]
+ * @param {string} property
+ * @returns {string}
+ */
+function findMostSpecificMatchedCSSRule(matchedCSSRules = [], property) {
+  let maxSpecificity = -Infinity;
+  /** @type {LH.Crdp.CSS.CSSRule|undefined} */
+  let maxSpecificityRule;
+
+  for (const {rule, matchingSelectors} of matchedCSSRules) {
+    if (hasSizeDeclaration(rule.style, property)) {
+      const specificities = matchingSelectors.map(idx =>
+        FontSize.computeSelectorSpecificity(rule.selectorList.selectors[idx].text)
+      );
+      const specificity = Math.max(...specificities);
+      // Use greater OR EQUAL so that the last rule wins in the event of a tie
+      if (specificity >= maxSpecificity) {
+        maxSpecificity = specificity;
+        maxSpecificityRule = rule;
+      }
+    }
+  }
+
+  if (maxSpecificityRule) {
+    // @ts-ignore the existence of the property object is checked in hasSizeDeclaration
+    return maxSpecificityRule.style.cssProperties.find(({name}) => name === property).value;
+  }
+  return '';
+}
+
+/**
+ * @param {LH.Crdp.CSS.GetMatchedStylesForNodeResponse} matched CSS rules}
+ * @param {string} property
+ * @returns {string}
+ */
+function getEffectiveSizingRule({attributesStyle, inlineStyle, matchedCSSRules}, property) {
+  // CSS sizing can't be inherited
+  // We only need to check inline & matched styles
+  // Inline styles have highest priority
+  if (hasSizeDeclaration(inlineStyle, property)) {
+    // @ts-ignore the existence of the property object is checked in hasSizeDeclaration
+    return inlineStyle.cssProperties.find(({name}) => name === property).value;
+  }
+
+  if (hasSizeDeclaration(attributesStyle, property)) {
+    // @ts-ignore the existence of the property object is checked in hasSizeDeclaration
+    return attributesStyle.cssProperties.find(({name}) => name === property).value;
+  }
+  // Rules directly referencing the node come next
+  const matchedRule = findMostSpecificMatchedCSSRule(matchedCSSRules, property);
+  if (matchedRule) return matchedRule;
+  return '';
+}
+
 class ImageElements extends Gatherer {
   constructor() {
     super();
@@ -191,6 +262,25 @@ class ImageElements extends Gatherer {
       // determineNaturalSize fails on invalid images, which we treat as non-visible
       return element;
     }
+  }
+
+  /**
+   * @param {Driver} driver
+   * @param {string} devtoolsNodePath
+   * @param {LH.Artifacts.ImageElement} element
+   */
+  async fetchSourceRules(driver, devtoolsNodePath, element) {
+    const {nodeId} = await driver.sendCommand('DOM.pushNodeByPathToFrontend', {
+      path: devtoolsNodePath,
+    });
+    if (!nodeId) return;
+    const matchedRules = await driver.sendCommand('CSS.getMatchedStylesForNode', {
+      nodeId: nodeId,
+    });
+    const sourceWidth = getEffectiveSizingRule(matchedRules, 'width');
+    const sourceHeight = getEffectiveSizingRule(matchedRules, 'height');
+    const sourceRules = {propertyWidth: sourceWidth, propertyHeight: sourceHeight};
+    Object.assign(element, sourceRules);
   }
 
   /**
@@ -232,6 +322,11 @@ class ImageElements extends Gatherer {
     const top50Images = Object.values(indexedNetworkRecords)
       .sort((a, b) => b.resourceSize - a.resourceSize)
       .slice(0, 50);
+    await Promise.all([
+      driver.sendCommand('DOM.enable'),
+      driver.sendCommand('CSS.enable'),
+      driver.sendCommand('DOM.getDocument', {depth: -1, pierce: true}),
+    ]);
 
     for (let element of elements) {
       // Pull some of our information directly off the network record.
@@ -244,7 +339,7 @@ class ImageElements extends Gatherer {
       // Use the min of the two numbers to be safe.
       const {resourceSize = 0, transferSize = 0} = networkRecord;
       element.resourceSize = Math.min(resourceSize, transferSize);
-
+      await this.fetchSourceRules(driver, element.devtoolsNodePath, element);
       // Images within `picture` behave strangely and natural size information isn't accurate,
       // CSS images have no natural size information at all. Try to get the actual size if we can.
       // Additional fetch is expensive; don't bother if we don't have a networkRecord for the image,
@@ -259,6 +354,11 @@ class ImageElements extends Gatherer {
 
       imageUsage.push(element);
     }
+
+    await Promise.all([
+      driver.sendCommand('DOM.disable'),
+      driver.sendCommand('CSS.disable'),
+    ]);
 
     return imageUsage;
   }
