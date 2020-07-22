@@ -54,8 +54,8 @@ function getHTMLImages(allElements) {
       naturalHeight: element.naturalHeight,
       attributeWidth: element.getAttribute('width') || '',
       attributeHeight: element.getAttribute('height') || '',
-      propertyWidth: '',
-      propertyHeight: '',
+      propertyWidth: '', // this will get overwritten below
+      propertyHeight: '', // this will get overwritten below
       isCss: false,
       // @ts-ignore: loading attribute not yet added to HTMLImageElement definition.
       loading: element.loading,

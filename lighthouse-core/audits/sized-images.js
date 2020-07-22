@@ -59,6 +59,7 @@ class SizedImages extends Audit {
    * @return {boolean}
    */
   static unsizedImage(attrWidth, attrHeight, cssWidth, cssHeight) {
+    // images are considered sized if they have defined & valid values
     if (attrWidth && attrHeight) {
       return !SizedImages.isValid(attrWidth) || !SizedImages.isValid(attrHeight);
     }
@@ -88,7 +89,6 @@ class SizedImages extends Audit {
       const attrHeight = image.attributeHeight;
       const cssWidth = image.propertyWidth;
       const cssHeight = image.propertyHeight;
-      // images are considered sized if they have defined & valid values
       if (SizedImages.unsizedImage(attrWidth, attrHeight, cssWidth, cssHeight)) {
         const url = URL.elideDataURI(image.src);
         unsizedImages.push({
