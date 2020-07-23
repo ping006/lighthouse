@@ -54,8 +54,8 @@ function getHTMLImages(allElements) {
       naturalHeight: element.naturalHeight,
       attributeWidth: element.getAttribute('width') || '',
       attributeHeight: element.getAttribute('height') || '',
-      propertyWidth: '', // this will get overwritten below
-      propertyHeight: '', // this will get overwritten below
+      cssWidth: '', // this will get overwritten below
+      cssHeight: '', // this will get overwritten below
       isCss: false,
       // @ts-ignore: loading attribute not yet added to HTMLImageElement definition.
       loading: element.loading,
@@ -114,8 +114,8 @@ function getCSSImages(allElements) {
       naturalHeight: 0,
       attributeWidth: '',
       attributeHeight: '',
-      propertyWidth: '',
-      propertyHeight: '',
+      cssWidth: '',
+      cssHeight: '',
       isCss: true,
       isPicture: false,
       usesObjectFit: false,
@@ -170,10 +170,13 @@ function determineNaturalSize(url) {
 /**
  * @param {LH.Crdp.CSS.CSSStyle} [style]
  * @param {string} property
- * @return {boolean}
+ * @return {string | undefined}
  */
-function hasSizeDeclaration(style, property) {
-  return !!style && !!style.cssProperties.find(({name}) => name === property);
+function findSizeDeclaration(style, property) {
+  if (!style) return;
+  const definedProp = style.cssProperties.find(({name}) => name === property);
+  if (!definedProp) return;
+  return definedProp.value;
 }
 
 /**
@@ -189,7 +192,8 @@ function findMostSpecificMatchedCSSRule(matchedCSSRules = [], property) {
   let maxSpecificityRule;
 
   for (const {rule, matchingSelectors} of matchedCSSRules) {
-    if (hasSizeDeclaration(rule.style, property)) {
+    // hasSizeDeclaration from font-size.js using `.some()`
+    if (!!rule.style && rule.style.cssProperties.some(({name}) => name === property)) {
       const specificities = matchingSelectors.map(idx =>
         FontSize.computeSelectorSpecificity(rule.selectorList.selectors[idx].text)
       );
@@ -218,15 +222,11 @@ function getEffectiveSizingRule({attributesStyle, inlineStyle, matchedCSSRules},
   // CSS sizing can't be inherited
   // We only need to check inline & matched styles
   // Inline styles have highest priority
-  if (hasSizeDeclaration(inlineStyle, property)) {
-    // @ts-ignore the existence of the property object is checked in hasSizeDeclaration
-    return inlineStyle.cssProperties.find(({name}) => name === property).value;
-  }
+  const inlineRule = findSizeDeclaration(inlineStyle, property);
+  if (inlineRule) return inlineRule;
 
-  if (hasSizeDeclaration(attributesStyle, property)) {
-    // @ts-ignore the existence of the property object is checked in hasSizeDeclaration
-    return attributesStyle.cssProperties.find(({name}) => name === property).value;
-  }
+  const attributeRule = findSizeDeclaration(attributesStyle, property);
+  if (attributeRule) return attributeRule;
   // Rules directly referencing the node come next
   const matchedRule = findMostSpecificMatchedCSSRule(matchedCSSRules, property);
   if (matchedRule) return matchedRule;

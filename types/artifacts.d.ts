@@ -414,10 +414,10 @@ declare global {
         attributeWidth: string;
         /** The raw height attribute of the image element. CSS images will be set to the empty string. */
         attributeHeight: string;
-        /** The CSS width property of the image element */
-        propertyWidth: string;
-        /** The CSS height property of the image element */
-        propertyHeight: string;
+        /** The CSS width property of the image element. */
+        cssWidth?: string;
+        /** The CSS height property of the image element. */
+        cssHeight?: string;
         /** The BoundingClientRect of the element. */
         clientRect: {
           top: number;

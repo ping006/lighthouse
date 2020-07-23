@@ -43,7 +43,7 @@ class SizedImages extends Audit {
    * @param {string} attr
    * @return {boolean}
    */
-  static isValid(attr) {
+  static isValidAttr(attr) {
     // an img size attribute is valid for preventing CLS
     // if it is a non-negative, non-zero integer
     const NON_NEGATIVE_INT_REGEX = /^\d+$/;
@@ -52,27 +52,32 @@ class SizedImages extends Audit {
   }
 
   /**
-   * @param {string} attrWidth
-   * @param {string} attrHeight
-   * @param {string} cssWidth
-   * @param {string} cssHeight
+   * @param {string} property
    * @return {boolean}
    */
-  static unsizedImage(attrWidth, attrHeight, cssWidth, cssHeight) {
+  static isValidCss(property) {
+    // an img css size property is valid for preventing CLS
+    // if it ...
+    return property !== 'auto';
+  }
+
+  /**
+   * @param {LH.Artifacts.ImageElement} image
+   * @return {boolean}
+   */
+  static isUnsizedImage(image) {
     // images are considered sized if they have defined & valid values
-    if (attrWidth && attrHeight) {
-      return !SizedImages.isValid(attrWidth) || !SizedImages.isValid(attrHeight);
-    }
-    if (attrWidth && cssHeight) {
-      return !SizedImages.isValid(attrWidth) || cssHeight === 'auto';
-    }
-    if (cssWidth && attrHeight) {
-      return cssWidth === 'auto' || !SizedImages.isValid(attrHeight);
-    }
-    if (cssWidth && cssHeight) {
-      return cssWidth === 'auto' || cssHeight === 'auto';
-    }
-    return true;
+    const attrWidth = image.attributeWidth;
+    const attrHeight = image.attributeHeight;
+    const cssWidth = image.cssWidth;
+    const cssHeight = image.cssHeight;
+    const widthIsValidAttribute = attrWidth && SizedImages.isValidAttr(attrWidth);
+    const widthIsValidCss = cssWidth && SizedImages.isValidCss(cssWidth);
+    const heightIsValidAttribute = attrHeight && SizedImages.isValidAttr(attrHeight);
+    const heightIsValidCss = cssHeight && SizedImages.isValidCss(cssHeight);
+    const validWidth = widthIsValidAttribute || widthIsValidCss;
+    const validHeight = heightIsValidAttribute || heightIsValidCss;
+    return !validWidth || !validHeight;
   }
 
   /**
@@ -85,11 +90,7 @@ class SizedImages extends Audit {
     const unsizedImages = [];
 
     for (const image of images) {
-      const attrWidth = image.attributeWidth;
-      const attrHeight = image.attributeHeight;
-      const cssWidth = image.propertyWidth;
-      const cssHeight = image.propertyHeight;
-      if (SizedImages.unsizedImage(attrWidth, attrHeight, cssWidth, cssHeight)) {
+      if (SizedImages.isUnsizedImage(image)) {
         const url = URL.elideDataURI(image.src);
         unsizedImages.push({
           url,
