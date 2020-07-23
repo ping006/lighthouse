@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const SizedImagesAudit = require('../../audits/unsized-images.js');
+const UnSizedImagesAudit = require('../../audits/unsized-images.js');
 
 /* eslint-env jest */
 
@@ -19,7 +19,7 @@ describe('Sized images audit', () => {
   function testImage(condition, data) {
     const description = `handles when an image ${condition}`;
     it(description, async () => {
-      const result = await SizedImagesAudit.audit({
+      const result = await UnSizedImagesAudit.audit({
         ImageElements: [
           generateImage(
             data.props
@@ -100,7 +100,7 @@ describe('Sized images audit', () => {
   });
 
   it('is not applicable when there are no images', async () => {
-    const result = await SizedImagesAudit.audit({
+    const result = await UnSizedImagesAudit.audit({
       ImageElements: [],
     });
     expect(result.notApplicable).toEqual(true);
@@ -108,7 +108,7 @@ describe('Sized images audit', () => {
   });
 
   it('can return multiple unsized images', async () => {
-    const result = await SizedImagesAudit.audit({
+    const result = await UnSizedImagesAudit.audit({
       ImageElements: [
         generateImage(
           {
@@ -142,23 +142,23 @@ describe('Sized images audit', () => {
 
 describe('Size attribute validity check', () => {
   it('fails on non-numeric characters', () => {
-    expect(SizedImagesAudit.isValid('zero')).toEqual(false);
-    expect(SizedImagesAudit.isValid('1002$')).toEqual(false);
-    expect(SizedImagesAudit.isValid('s-5')).toEqual(false);
-    expect(SizedImagesAudit.isValid('3,000')).toEqual(false);
-    expect(SizedImagesAudit.isValid('100.0')).toEqual(false);
-    expect(SizedImagesAudit.isValid('2/3')).toEqual(false);
-    expect(SizedImagesAudit.isValid('-2020')).toEqual(false);
-    expect(SizedImagesAudit.isValid('+2020')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('zero')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('1002$')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('s-5')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('3,000')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('100.0')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('2/3')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('-2020')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('+2020')).toEqual(false);
   });
 
   it('fails on zero input', () => {
-    expect(SizedImagesAudit.isValid('0')).toEqual(false);
+    expect(UnSizedImagesAudit.isValidAttr('0')).toEqual(false);
   });
 
   it('passes on non-zero non-negative integer input', () => {
-    expect(SizedImagesAudit.isValid('1')).toEqual(true);
-    expect(SizedImagesAudit.isValid('250')).toEqual(true);
-    expect(SizedImagesAudit.isValid('4000000')).toEqual(true);
+    expect(UnSizedImagesAudit.isValidAttr('1')).toEqual(true);
+    expect(UnSizedImagesAudit.isValidAttr('250')).toEqual(true);
+    expect(UnSizedImagesAudit.isValidAttr('4000000')).toEqual(true);
   });
 });
