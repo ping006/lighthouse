@@ -207,7 +207,7 @@ function findMostSpecificMatchedCSSRule(matchedCSSRules = [], property) {
   }
 
   if (maxSpecificityRule) {
-    // @ts-ignore the existence of the property object is checked in hasSizeDeclaration
+    // @ts-ignore the existence of the property object is checked in the for loop
     return maxSpecificityRule.style.cssProperties.find(({name}) => name === property).value;
   }
   return '';
@@ -216,7 +216,7 @@ function findMostSpecificMatchedCSSRule(matchedCSSRules = [], property) {
 /**
  * @param {LH.Crdp.CSS.GetMatchedStylesForNodeResponse} matched CSS rules}
  * @param {string} property
- * @returns {string}
+ * @returns {string | undefined}
  */
 function getEffectiveSizingRule({attributesStyle, inlineStyle, matchedCSSRules}, property) {
   // CSS sizing can't be inherited
@@ -230,7 +230,6 @@ function getEffectiveSizingRule({attributesStyle, inlineStyle, matchedCSSRules},
   // Rules directly referencing the node come next
   const matchedRule = findMostSpecificMatchedCSSRule(matchedCSSRules, property);
   if (matchedRule) return matchedRule;
-  return '';
 }
 
 class ImageElements extends Gatherer {
@@ -279,7 +278,7 @@ class ImageElements extends Gatherer {
     });
     const sourceWidth = getEffectiveSizingRule(matchedRules, 'width');
     const sourceHeight = getEffectiveSizingRule(matchedRules, 'height');
-    const sourceRules = {propertyWidth: sourceWidth, propertyHeight: sourceHeight};
+    const sourceRules = {cssWidth: sourceWidth, cssHeight: sourceHeight};
     Object.assign(element, sourceRules);
   }
 
