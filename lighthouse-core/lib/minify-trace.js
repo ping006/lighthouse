@@ -67,7 +67,6 @@ const traceEventsToKeepInProcess = new Set([
   'largestContentfulPaint::Invalidate',
   'largestContentfulPaint::Candidate',
   'Animation',
-  'CompositeAnimation',
 ]);
 
 /**

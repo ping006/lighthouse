@@ -16,12 +16,15 @@ describe('Non-composited animations audit', () => {
       traces: {defaultPass: trace},
       TraceElements: [
         {
-          'metricName': 'CLS/non-composited-animations',
-          'devtoolsNodePath': '1,HTML,1,BODY,1,DIV',
-          'selector': 'body > div#animated-boi',
-          'nodeLabel': 'div',
-          'snippet': '<div id="animated-boi">',
-          'nodeId': 5,
+          traceEventType: 'animation',
+          devtoolsNodePath: '1,HTML,1,BODY,1,DIV',
+          selector: 'body > div#animated-boi',
+          nodeLabel: 'div',
+          snippet: '<div id="animated-boi">',
+          nodeId: 4,
+          animations: [
+            {id: '1', name: 'example'},
+          ]
         },
       ],
     };
@@ -33,11 +36,11 @@ describe('Non-composited animations audit', () => {
     expect(auditResult.details.items).toHaveLength(1);
     expect(auditResult.details.items[0].subItems.items).toEqual([
       {node: {
-        'type': 'node',
-        'path': '1,HTML,1,BODY,1,DIV',
-        'selector': 'body > div#animated-boi',
-        'nodeLabel': 'div',
-        'snippet': '<div id="animated-boi">',
+        type: 'node',
+        path: '1,HTML,1,BODY,1,DIV',
+        selector: 'body > div#animated-boi',
+        nodeLabel: 'div',
+        snippet: '<div id="animated-boi">',
       }},
     ]);
     expect(auditResult.details.items[0].animation).toEqual('example');
