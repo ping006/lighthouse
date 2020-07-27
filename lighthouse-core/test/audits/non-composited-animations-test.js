@@ -24,7 +24,7 @@ describe('Non-composited animations audit', () => {
           nodeId: 4,
           animations: [
             {id: '1', name: 'example'},
-          ]
+          ],
         },
       ],
     };
