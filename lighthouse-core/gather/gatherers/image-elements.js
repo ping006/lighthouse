@@ -184,7 +184,7 @@ function findSizeDeclaration(style, property) {
  *
  * @param {Array<LH.Crdp.CSS.RuleMatch>} [matchedCSSRules]
  * @param {string} property
- * @returns {string}
+ * @returns {string | undefined}
  */
 function findMostSpecificMatchedCSSRule(matchedCSSRules = [], property) {
   let maxSpecificity = -Infinity;
@@ -210,7 +210,6 @@ function findMostSpecificMatchedCSSRule(matchedCSSRules = [], property) {
     // @ts-ignore the existence of the property object is checked in the for loop
     return maxSpecificityRule.style.cssProperties.find(({name}) => name === property).value;
   }
-  return '';
 }
 
 /**
