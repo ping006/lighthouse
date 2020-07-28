@@ -19,7 +19,7 @@ const libStats = require('../../lib/large-javascript-libraries/bundlephobia-data
 /** @type {Record<string, string[]>} */
 const librarySuggestions = require('../../lib/large-javascript-libraries/library-suggestions.js').suggestions;
 
-const Audit = require('../audit.js');
+const ByteEfficiencyAudit = require('./byte-efficiency-audit.js');
 const i18n = require('../../lib/i18n/i18n.js');
 
 const UIStrings = {
@@ -37,7 +37,7 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
-class LargeJavascriptLibraries extends Audit {
+class LargeJavascriptLibraries extends ByteEfficiencyAudit {
   /**
    * @return {LH.Audit.Meta}
    */
@@ -47,16 +47,17 @@ class LargeJavascriptLibraries extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
+      scoreDisplayMode: ByteEfficiencyAudit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['Stacks'],
     };
   }
 
   /**
    * @param {LH.Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @return {ByteEfficiencyAudit.ByteEfficiencyProduct}
    */
   static audit(artifacts) {
-    /** @type {Array<{original: BundlePhobiaLibrary, suggestions: BundlePhobiaLibrary[]}>} */
+    /** @type {Array<{original: any, suggestions: any[]}>} */
     const libraryPairings = [];
     const detectedLibs = artifacts.Stacks.filter(stack => stack.detector === 'js');
 
@@ -98,7 +99,7 @@ class LargeJavascriptLibraries extends Audit {
       }
     }
 
-    const tableDetails = [];
+    const items = [];
     for (const libraryPairing of libraryPairings) {
       const original = libraryPairing.original;
       const suggestions = libraryPairing.suggestions;
@@ -114,7 +115,7 @@ class LargeJavascriptLibraries extends Audit {
         };
       });
 
-      tableDetails.push({
+      items.push({
         name: {
           text: original.name,
           url: original.repository,
@@ -129,22 +130,18 @@ class LargeJavascriptLibraries extends Audit {
       });
     }
 
-    /** @type {LH.Audit.Details.TableColumnHeading[]} */
+    /** @type {LH.Audit.Details.Opportunity['headings']} */
     const headings = [
       /* eslint-disable max-len */
-      {key: 'name', itemType: 'url', subItemsHeading: {key: 'suggestion'}, text: str_(UIStrings.name)},
-      {key: 'transferSize', itemType: 'bytes', subItemsHeading: {key: 'transferSize'}, text: str_(i18n.UIStrings.columnTransferSize)},
-      {key: 'wastedBytes', itemType: 'bytes', subItemsHeading: {key: 'wastedBytes'}, text: str_(i18n.UIStrings.columnWastedBytes)},
+      {key: 'name', valueType: 'url', subItemsHeading: {key: 'suggestion'}, label: str_(UIStrings.name)},
+      {key: 'transferSize', valueType: 'bytes', subItemsHeading: {key: 'transferSize'}, label: str_(i18n.UIStrings.columnTransferSize)},
+      {key: 'wastedBytes', valueType: 'bytes', subItemsHeading: {key: 'wastedBytes'}, label: str_(i18n.UIStrings.columnWastedBytes)},
       /* eslint-enable max-len */
     ];
 
-    const details = Audit.makeTableDetails(headings, tableDetails, {});
-
     return {
-      score: libraryPairings.length > 0 ? 0 : 1,
-      details: {
-        ...details,
-      },
+      items,
+      headings,
     };
   }
 }
