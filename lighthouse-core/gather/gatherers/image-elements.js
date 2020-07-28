@@ -57,7 +57,7 @@ function getHTMLImages(allElements) {
       cssWidth: '', // this will get overwritten below
       cssHeight: '', // this will get overwritten below
       isCss: false,
-      // @ts-ignore: loading attribute not yet added to HTMLImageElement definition.
+      // @ts-expect-error: loading attribute not yet added to HTMLImageElement definition.
       loading: element.loading,
       resourceSize: 0, // this will get overwritten below
       isPicture: !!element.parentElement && element.parentElement.tagName === 'PICTURE',
@@ -101,7 +101,7 @@ function getCSSImages(allElements) {
     if (!style.backgroundImage || !CSS_URL_REGEX.test(style.backgroundImage)) continue;
 
     const imageMatch = style.backgroundImage.match(CSS_URL_REGEX);
-    // @ts-ignore test() above ensures that there is a match.
+    // @ts-expect-error test() above ensures that there is a match.
     const url = imageMatch[1];
 
     images.push({
@@ -144,7 +144,7 @@ function getCSSImages(allElements) {
 /* istanbul ignore next */
 function collectImageElementInfo() {
   /** @type {Array<Element>} */
-  // @ts-ignore - added by getElementsInDocumentFnString
+  // @ts-expect-error - added by getElementsInDocumentFnString
   const allElements = getElementsInDocument();
   return getHTMLImages(allElements).concat(getCSSImages(allElements));
 }
