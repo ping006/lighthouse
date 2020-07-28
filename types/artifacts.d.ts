@@ -429,6 +429,8 @@ declare global {
         isCss: boolean;
         /** Flags whether this element was contained within a <picture> tag. */
         isPicture: boolean;
+        /** Flags whether this element was contained within a ShadowRoot */
+        isShadow: boolean;
         /** Flags whether this element was sized using a non-default `object-fit` CSS property. */
         usesObjectFit: boolean;
         /** Flags whether this element was rendered using a pixel art scaling method.

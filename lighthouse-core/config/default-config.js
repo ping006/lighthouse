@@ -238,6 +238,7 @@ const defaultConfig = {
     'layout-shift-elements',
     'long-tasks',
     'no-unload-listeners',
+    'unsized-images',
     'manual/pwa-cross-browser',
     'manual/pwa-page-transitions',
     'manual/pwa-each-page-has-url',
@@ -552,6 +553,7 @@ const defaultConfig = {
         {id: 'no-vulnerable-libraries', weight: 1, group: 'best-practices-trust-safety'},
         // User Experience
         {id: 'password-inputs-can-be-pasted-into', weight: 1, group: 'best-practices-ux'},
+        {id: 'unsized-images', weight: 1, group: 'best-practices-ux'},
         {id: 'image-aspect-ratio', weight: 1, group: 'best-practices-ux'},
         {id: 'image-size-responsive', weight: 1, group: 'best-practices-ux'},
         // Browser Compatibility

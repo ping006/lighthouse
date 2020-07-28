@@ -14,7 +14,7 @@ const pageFunctions = require('../../lib/page-functions.js');
 const Driver = require('../driver.js'); // eslint-disable-line no-unused-vars
 const FontSize = require('./seo/font-size.js');
 
-/* global window, getElementsInDocument, Image, getNodePath, getNodeSelector, getNodeLabel, getOuterHTMLSnippet */
+/* global window, getElementsInDocument, Image, getNodePath, getNodeSelector, getNodeLabel, getOuterHTMLSnippet, ShadowRoot */
 
 
 /** @param {Element} element */
@@ -67,6 +67,7 @@ function getHTMLImages(allElements) {
       usesPixelArtScaling: ['pixelated', 'crisp-edges'].includes(
         computedStyle.getPropertyValue('image-rendering')
       ),
+      isShadow: element.getRootNode() instanceof ShadowRoot,
       // https://html.spec.whatwg.org/multipage/images.html#pixel-density-descriptor
       usesSrcSetDensityDescriptor: / \d+(\.\d+)?x/.test(element.srcset),
       // @ts-ignore - getNodePath put into scope via stringification
@@ -118,6 +119,7 @@ function getCSSImages(allElements) {
       cssHeight: '',
       isCss: true,
       isPicture: false,
+      isShadow: element.getRootNode() instanceof ShadowRoot,
       usesObjectFit: false,
       usesPixelArtScaling: ['pixelated', 'crisp-edges'].includes(
         style.getPropertyValue('image-rendering')
@@ -337,7 +339,9 @@ class ImageElements extends Gatherer {
       // Use the min of the two numbers to be safe.
       const {resourceSize = 0, transferSize = 0} = networkRecord;
       element.resourceSize = Math.min(resourceSize, transferSize);
-      await this.fetchSourceRules(driver, element.devtoolsNodePath, element);
+      if (!element.isShadow) {
+        await this.fetchSourceRules(driver, element.devtoolsNodePath, element);
+      }
       // Images within `picture` behave strangely and natural size information isn't accurate,
       // CSS images have no natural size information at all. Try to get the actual size if we can.
       // Additional fetch is expensive; don't bother if we don't have a networkRecord for the image,
@@ -349,7 +353,6 @@ class ImageElements extends Gatherer {
       ) {
         element = await this.fetchElementWithSizeInformation(driver, element);
       }
-
       imageUsage.push(element);
     }
 

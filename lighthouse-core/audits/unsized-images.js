@@ -86,8 +86,8 @@ class SizedImages extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts) {
-    // CSS background-images are ignored for this audit.
-    const images = artifacts.ImageElements.filter(el => !el.isCss);
+    // CSS background-images & ShadowRoot images are ignored for this audit.
+    const images = artifacts.ImageElements.filter(el => !el.isCss && !el.isShadow);
     const unsizedImages = [];
 
     for (const image of images) {
