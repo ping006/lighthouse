@@ -51,7 +51,12 @@ async function detectLibraries() {
 
   for (const [name, lib] of Object.entries(libraryDetectorTests)) {
     try {
-      const result = await lib.test(window);
+      /** @type {NodeJS.Timeout|undefined} */
+      let timeout;
+      const timeoutPromise = new Promise(r => timeout = setTimeout(() => r(false), 1000));
+
+      const result = await Promise.race([lib.test(window), timeoutPromise]);
+      if (timeout) clearTimeout(timeout);
       if (result) {
         libraries.push({
           id: lib.id,
