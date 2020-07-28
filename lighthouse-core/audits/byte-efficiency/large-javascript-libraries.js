@@ -54,9 +54,9 @@ class LargeJavascriptLibraries extends ByteEfficiencyAudit {
 
   /**
    * @param {LH.Artifacts} artifacts
-   * @return {ByteEfficiencyAudit.ByteEfficiencyProduct}
+   * @return {Promise<ByteEfficiencyAudit.ByteEfficiencyProduct>}
    */
-  static audit(artifacts) {
+  static async audit(artifacts) {
     /** @type {Array<{original: any, suggestions: any[]}>} */
     const libraryPairings = [];
     const detectedLibs = artifacts.Stacks.filter(stack => stack.detector === 'js');
