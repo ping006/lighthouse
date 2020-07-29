@@ -2,7 +2,7 @@
 
 > Lighthouse analyzes web apps and web pages, collecting modern performance metrics and insights on developer best practices.
 
-# Test
+# Test2
 
 - Using Lighthouse
   - [Using Lighthouse in Chrome DevTools](#using-lighthouse-in-chrome-devtools)
