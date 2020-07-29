@@ -78,7 +78,7 @@ class SizedImages extends Audit {
     const heightIsValidCss = SizedImages.isValidCss(cssHeight);
     const validWidth = widthIsValidAttribute || widthIsValidCss;
     const validHeight = heightIsValidAttribute || heightIsValidCss;
-    return !validWidth || !validHeight;
+    return !validWidth || !validHeight; // change to validWidth && validHeight + isSizedImage, remove ! below
   }
 
   /**
