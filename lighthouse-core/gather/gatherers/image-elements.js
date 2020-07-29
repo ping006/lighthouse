@@ -339,6 +339,7 @@ class ImageElements extends Gatherer {
       // Use the min of the two numbers to be safe.
       const {resourceSize = 0, transferSize = 0} = networkRecord;
       element.resourceSize = Math.min(resourceSize, transferSize);
+
       if (!element.isShadow) {
         await this.fetchSourceRules(driver, element.devtoolsNodePath, element);
       }
@@ -353,6 +354,7 @@ class ImageElements extends Gatherer {
       ) {
         element = await this.fetchElementWithSizeInformation(driver, element);
       }
+
       imageUsage.push(element);
     }
 
