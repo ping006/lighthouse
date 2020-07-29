@@ -67,7 +67,7 @@ class SizedImages extends Audit {
    * @param {LH.Artifacts.ImageElement} image
    * @return {boolean}
    */
-  static isUnsizedImage(image) {
+  static isSizedImage(image) {
     const attrWidth = image.attributeWidth;
     const attrHeight = image.attributeHeight;
     const cssWidth = image.cssWidth;
@@ -78,7 +78,7 @@ class SizedImages extends Audit {
     const heightIsValidCss = SizedImages.isValidCss(cssHeight);
     const validWidth = widthIsValidAttribute || widthIsValidCss;
     const validHeight = heightIsValidAttribute || heightIsValidCss;
-    return !validWidth || !validHeight; // change to validWidth && validHeight + isSizedImage, remove ! below
+    return validWidth && validHeight;
   }
 
   /**
@@ -91,7 +91,7 @@ class SizedImages extends Audit {
     const unsizedImages = [];
 
     for (const image of images) {
-      if (!SizedImages.isUnsizedImage(image)) continue;
+      if (SizedImages.isSizedImage(image)) continue;
       const url = URL.elideDataURI(image.src);
       unsizedImages.push({
         url,

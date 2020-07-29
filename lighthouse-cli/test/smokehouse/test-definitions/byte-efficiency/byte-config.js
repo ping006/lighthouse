@@ -29,7 +29,7 @@ const config = {
       // that makes sense to test together.
       'image-size-responsive',
       // unsized-images is not a byte-efficiency audit but can easily leverage the variety of images present in
-      // byte-efficiency tests; removing the need for a completely new smoke test.
+      // byte-efficiency tests & thus makes sense to test together.
       'unsized-images',
     ],
     throttlingMethod: 'devtools',
